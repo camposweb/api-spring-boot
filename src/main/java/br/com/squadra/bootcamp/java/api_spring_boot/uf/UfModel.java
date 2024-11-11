@@ -29,10 +29,9 @@ public class UfModel {
     @Column(name = "STATUS", nullable = false, length = 3)
     private int status;
 
-    public UfModel (UfModel dadosUf) {
-        this.codigoUf = dadosUf.getCodigoUf();
-        this.sigla = dadosUf.getSigla();
-        this.nome = dadosUf.getNome();
-        this.status = dadosUf.getStatus();
+    public UfModel (UfDTO dadosUf) {
+        this.sigla = dadosUf.sigla();
+        this.nome = dadosUf.nome();
+        this.status = dadosUf.status();
     }
 }

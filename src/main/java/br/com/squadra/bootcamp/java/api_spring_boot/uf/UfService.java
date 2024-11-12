@@ -1,12 +1,9 @@
 package br.com.squadra.bootcamp.java.api_spring_boot.uf;
 
-import org.hibernate.validator.constraints.Length;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import br.com.squadra.bootcamp.java.api_spring_boot.infra.exception.ValidacaoException;
 import br.com.squadra.bootcamp.java.api_spring_boot.uf.validacoes.cadastro.ValidadorCadastroUf;
-import jakarta.validation.constraints.NotBlank;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -25,25 +22,57 @@ public class UfService {
 
     public List<UfModel> cadastrarUf(UfDTO dadosUf) {
 
-        var siglaUfExist = this.ufRepository.existsBySigla(dadosUf.sigla());
-		if (siglaUfExist) {
-			throw new ValidacaoException("Sigla " + dadosUf.sigla() + " já cadastrada", 404);
+        var existeSiglaUf = this.ufRepository.existsBySigla(dadosUf.sigla());
+		if (existeSiglaUf) {
+			throw new ValidacaoException("Sigla " + dadosUf.sigla() + " já existe", 404);
 		}
 
-        var nomeUfExist = this.ufRepository.existsByNome(dadosUf.nome());
-		if (nomeUfExist) {
-			throw new ValidacaoException("Nome do UF " + dadosUf.nome() + " já cadastrada", 404);
+        var existeNomeUf = this.ufRepository.existsByNome(dadosUf.nome());
+		if (existeNomeUf) {
+			throw new ValidacaoException("Nome do UF " + dadosUf.nome() + " já existe", 404);
 		}
-        
+
         //validadores.forEach(v -> v.validar(dadosUf));
 
-        var ufCreated = new UfModel(dadosUf);
-        this.ufRepository.save(ufCreated);
+        var cadastrarUf = new UfModel(dadosUf);
+        this.ufRepository.save(cadastrarUf);
 
         return this.ufRepository.findAll();
     }
 
+    public List<UfModel> atualizarUf(AtualizacaoUfDTO dadosUf) {
+
+        var existeCodigoUf = this.ufRepository.existsByCodigoUf(dadosUf.codigoUf());
+        if (!existeCodigoUf) {
+            throw new ValidacaoException("UF com o código " + dadosUf.codigoUf() + " não existe", 404);
+        }
+
+        var existeSiglaUf = this.ufRepository.existsBySigla(dadosUf.sigla());
+        if (!existeSiglaUf) {
+            throw new ValidacaoException("Sigla " + dadosUf.sigla() + " não existe", 404);
+        }
+
+        var existeNomeUf = this.ufRepository.existsByNome(dadosUf.nome());
+        if (!existeNomeUf) {
+            throw new ValidacaoException("Nome do UF " + dadosUf.nome() + " já existe", 404);
+        }
+
+        var atualizarUf = this.ufRepository.getReferenceById(dadosUf.codigoUf());
+        atualizarUf.atualizarInformacoes(dadosUf);
+
+        return this.ufRepository.findAll();
+    }
+
+    public List<UfModel> deletarUf(DeletarUfDTO dadosUf) {
+
+        var existeCodigoUf = this.ufRepository.existsByCodigoUf(dadosUf.codigoUf());
+        if (!existeCodigoUf) {
+            throw new ValidacaoException("UF com o código " + dadosUf.codigoUf() + " não existe", 404);
+        }
+
+       this.ufRepository.deleteById(dadosUf.codigoUf());
 
 
-
+        return this.ufRepository.findAll();
+    }
 }

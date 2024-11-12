@@ -34,4 +34,17 @@ public class UfModel {
         this.nome = dadosUf.nome();
         this.status = dadosUf.status();
     }
+
+    public void atualizarInformacoes(AtualizacaoUfDTO dadosUf) {
+        if (dadosUf.sigla() != null) {
+            this.sigla = dadosUf.sigla();
+        }
+        if (dadosUf.nome() != null) {
+            this.nome = dadosUf.nome();
+        }
+        if (dadosUf.status() != 0) {
+            this.status = dadosUf.status();
+        }
+    }
+
 }

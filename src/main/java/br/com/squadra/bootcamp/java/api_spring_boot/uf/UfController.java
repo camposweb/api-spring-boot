@@ -17,40 +17,44 @@ public class UfController {
     private UfService ufService;
 
     @GetMapping
-    public ResponseEntity<List<ListaUfDTO>> listarUfs() {
+    public ResponseEntity<List<ListaUfDTO>> listarUf() {
 
         var ufs = this.ufService.ListarTodasUfs().stream().map(ListaUfDTO::new).toList();
 
-        return ResponseEntity.ok().body(ufs);
+        return ResponseEntity.status(200).body(ufs);
     }
 
     @PostMapping
     @Transactional
     public ResponseEntity<List<ListaUfDTO>> cadastrarUf(@RequestBody @Valid UfDTO dadosUf) {
-       
+
         var ufs = this.ufService.cadastrarUf(dadosUf).stream().map(ListaUfDTO::new).toList();
         
-        return ResponseEntity.ok().body(ufs);
+        return ResponseEntity.status(200).body(ufs);
     }
 
-    /* @GetMapping(params = "codigoUf")
-    public ResponseEntity listarUf(@RequestParam Long codigoUf) {
+    @PutMapping
+    @Transactional
+    public ResponseEntity<List<ListaUfDTO>> atualizarUf(@RequestBody @Valid AtualizacaoUfDTO dadosUf) {
 
-        if (codigoUf != null) {
-            var ufExist = this.ufRepository.existsByCodigoUf(codigoUf);
+        var ufs = this.ufService.atualizarUf(dadosUf).stream().map(ListaUfDTO::new).toList();
 
-            if (ufExist) {
-                var uf = this.ufRepository.findByCodigoUf(codigoUf);
-                return ResponseEntity.ok().body(uf);
-            } else {
-                return ResponseEntity.created(null).body("UF Não encontrado");
-            }
+        return ResponseEntity.status(200).body(ufs);
+    }
+
+    @DeleteMapping
+    @Transactional
+    public ResponseEntity<List<ListaUfDTO>> deletarUf(@RequestBody @Valid DeletarUfDTO dadosUf) {
+
+        if (dadosUf.codigoUf() == null) {
+            throw new RuntimeException("Código do UF não informado");
         }
 
-        var ufs = this.ufRepository.findAll();
-        return ResponseEntity.ok().body(ufs);
-     */
-    
+        var ufs = this.ufService.deletarUf(dadosUf).stream().map(ListaUfDTO::new).toList();
+
+        return ResponseEntity.status(200).body(ufs);
+    }
+
 }
 
 

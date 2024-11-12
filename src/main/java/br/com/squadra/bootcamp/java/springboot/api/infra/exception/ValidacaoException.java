@@ -1,4 +1,4 @@
-package br.com.squadra.bootcamp.java.api_spring_boot.infra.exception;
+package br.com.squadra.bootcamp.java.springboot.api.infra.exception;
 
 public class ValidacaoException extends RuntimeException {
 

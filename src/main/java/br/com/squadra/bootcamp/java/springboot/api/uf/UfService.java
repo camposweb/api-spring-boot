@@ -1,7 +1,7 @@
-package br.com.squadra.bootcamp.java.api_spring_boot.uf;
+package br.com.squadra.bootcamp.java.springboot.api.uf;
 
-import br.com.squadra.bootcamp.java.api_spring_boot.infra.exception.ValidacaoException;
-import br.com.squadra.bootcamp.java.api_spring_boot.uf.validacoes.cadastro.ValidadorCadastroUf;
+import br.com.squadra.bootcamp.java.springboot.api.infra.exception.ValidacaoException;
+import br.com.squadra.bootcamp.java.springboot.api.uf.validacoes.cadastro.ValidadorCadastroUf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

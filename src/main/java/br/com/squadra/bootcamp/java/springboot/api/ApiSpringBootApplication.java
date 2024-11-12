@@ -1,4 +1,4 @@
-package br.com.squadra.bootcamp.java.api_spring_boot;
+package br.com.squadra.bootcamp.java.springboot.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

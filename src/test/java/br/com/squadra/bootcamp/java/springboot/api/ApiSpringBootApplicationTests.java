@@ -1,4 +1,4 @@
-package br.com.squadra.bootcamp.java.api_spring_boot;
+package br.com.squadra.bootcamp.java.springboot.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

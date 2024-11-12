@@ -1,11 +1,11 @@
-package br.com.squadra.bootcamp.java.api_spring_boot.uf.validacoes.cadastro;
+package br.com.squadra.bootcamp.java.springboot.api.uf.validacoes.cadastro;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import br.com.squadra.bootcamp.java.api_spring_boot.infra.exception.ValidacaoException;
-import br.com.squadra.bootcamp.java.api_spring_boot.uf.IUfRepository;
-import br.com.squadra.bootcamp.java.api_spring_boot.uf.UfDTO;
+import br.com.squadra.bootcamp.java.springboot.api.infra.exception.ValidacaoException;
+import br.com.squadra.bootcamp.java.springboot.api.uf.IUfRepository;
+import br.com.squadra.bootcamp.java.springboot.api.uf.UfDTO;
 
 @Component("ValidadorNomeUfExiste")
 public class ValidadorNomeUfExiste {

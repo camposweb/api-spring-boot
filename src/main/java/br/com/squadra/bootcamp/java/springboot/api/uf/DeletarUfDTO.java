@@ -1,4 +1,4 @@
-package br.com.squadra.bootcamp.java.api_spring_boot.uf;
+package br.com.squadra.bootcamp.java.springboot.api.uf;
 
 import jakarta.validation.constraints.NotNull;
 

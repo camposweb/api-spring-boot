@@ -1,6 +1,12 @@
 package br.com.squadra.bootcamp.java.springboot.api.uf;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,7 +33,7 @@ public class UfModel {
     private String nome;
 
     @Column(name = "STATUS", nullable = false, length = 3)
-    private int status;
+    private Integer status;
 
     public UfModel (UfDTO dadosUf) {
         this.sigla = dadosUf.sigla();
@@ -42,6 +48,12 @@ public class UfModel {
         if (dadosUf.nome() != null) {
             this.nome = dadosUf.nome();
         }
+        if (dadosUf.status() != 0) {
+            this.status = dadosUf.status();
+        }
+    }
+
+    public void alterarStatus(AtualizacaoUfDTO dadosUf) {
         if (dadosUf.status() != 0) {
             this.status = dadosUf.status();
         }

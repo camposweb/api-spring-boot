@@ -20,6 +20,6 @@ public record AtualizacaoUfDTO(
 
         @NotNull
         @Range(min = 1, max = 2, message = "Deve conter 1 para ativo ou 2 para desativado")
-        int status
+        Integer status
 ) {
 }

@@ -8,7 +8,7 @@ public record ListaUfDTO(
 
         String nome,
 
-        int status
+        Integer status
 
 ) {
     public ListaUfDTO(UfModel ufModel) {

@@ -30,19 +30,20 @@ public class TratamentoDeErros {
 
     @ExceptionHandler(ValidacaoException.class)
     public ResponseEntity tratarErroRegraDeNegocio(ValidacaoException ex) {
-        var error = Map.of("message", ex.getMessage(), "status", ex.getStatus());
+        String mensagemErro = ex.getMessage();
+        var error = Map.of("mensagem", mensagemErro, "status", ex.getStatus());
         return ResponseEntity.status(404).body(error);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity tratarErroCampoInexistente(HttpMessageNotReadableException ex) {
         Throwable causa = ex.getCause();
-        var mensagemErro = Map.of("message", "A estrutura JSON da requisição está incorreta", "status", 404);
+        var mensagemErro = Map.of("mensagem", "A estrutura JSON da requisição está incorreta", "status", 404);
 
 
         if (causa instanceof UnrecognizedPropertyException e) {
             String campoInexistente = e.getPropertyName();
-            mensagemErro = Map.of("message", "O campo '" + campoInexistente + "' não existe nesta estrutura JSON", "status", 404);
+            mensagemErro = Map.of("mensagem", "O campo '" + campoInexistente + "' não existe nesta estrutura JSON", "status", 404);
 
 
         }

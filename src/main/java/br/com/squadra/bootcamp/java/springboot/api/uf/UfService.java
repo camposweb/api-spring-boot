@@ -37,7 +37,7 @@ public class UfService {
         } else if (status.isPresent()) {
             return this.ufRepository.findByStatus(status.get());
         } else {
-            return ufRepository.findAll();
+            return this.ufRepository.findAll();
         }
     }
 

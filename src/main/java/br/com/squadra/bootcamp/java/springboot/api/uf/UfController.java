@@ -1,9 +1,11 @@
 package br.com.squadra.bootcamp.java.springboot.api.uf;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,9 @@ public class UfController {
     @Autowired
     private UfService ufService;
 
+    @Autowired
+    private IUfRepository ufRepository;
+
     private static final Set<String> PARAMETROS_VALIDOS = Set.of("codigoUf", "sigla", "nome", "status");
 
     @GetMapping
@@ -47,23 +52,61 @@ public class UfController {
                 }
 
                 if (codigoUf.isPresent()) {
-                    return ResponseEntity.ok().body(this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).findFirst());
+                    var resultado = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).findFirst();
+
+                    var resultadoVazio = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList().isEmpty();
+
+                    return ResponseEntity.ok().body(resultadoVazio ? new ArrayList<>() : resultado);
                 }
 
                 if (sigla.isPresent()) {
-                    return ResponseEntity.ok().body(this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).findFirst());
+                    var resultado = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).findFirst();
+
+                    var resultadoVazio = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList().isEmpty();
+
+                    return ResponseEntity.ok().body(resultadoVazio ? new ArrayList<>() : resultado);
                 }
 
                 if (nome.isPresent()) {
-                    return ResponseEntity.ok().body(this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).findFirst());
+                    if ((status.get() < 1 || status.get() > 2)) {
+                        return ResponseEntity.ok().body(new ArrayList<>());
+                    }
+
+                    var s = this.ufRepository.existsByNomeAndStatus(nome.get(), status.get());
+                    if (!s) {
+                        return ResponseEntity.ok().body(new ArrayList<>());
+                    }
+                    
+                    var resultado = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).findFirst();
+
+                    var resultadoVazio = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList().isEmpty();
+
+                    return ResponseEntity.ok().body(resultadoVazio ? new ArrayList<>() : resultado);
                 }
+
+                if (status.get() < 1 || status.get() > 2) {
+                    //var resultadoVazio = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList().isEmpty();
+                    return ResponseEntity.ok().body(Map.of("mensagem", "Status tem valor 1 ou 2"));
+                }
+
+                if (status.isPresent()) {
+                    var resultado = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList();
+
+                    var resultadoVazio = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList().isEmpty();
+
+                    return ResponseEntity.ok().body(resultadoVazio ? new ArrayList<>() : resultado);
+                }
+
+                
+
 
                 if ((codigoUf.isPresent() || sigla.isPresent() || nome.isPresent()) && status.isPresent()) {
                     var listaComStatusEOutroParametro = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).findFirst();
                     return ResponseEntity.ok().body(listaComStatusEOutroParametro);
                 }
+
                 
-                 listarTodasUfs = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList();
+                 //listarTodasUfs = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList();
                  
             }
 

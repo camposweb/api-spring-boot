@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Range;
 public record AtualizacaoUfDTO(
 
         @NotNull
+        @Range(min = 1, message = "Deve conter o codigoUf referente")
         Long codigoUf,
 
         @NotBlank

@@ -1,15 +1,8 @@
 package br.com.squadra.bootcamp.java.springboot.api.municipio;
 
+import br.com.squadra.bootcamp.java.springboot.api.uf.UfDTO;
 import br.com.squadra.bootcamp.java.springboot.api.uf.UfModel;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,7 +22,7 @@ public class MunicipioModel {
 	@Column(name = "CODIGO_MUNICIPIO", nullable = false, length = 9)
 	private Long codigoMunicipio;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CODIGO_UF", nullable = false)
 	private UfModel codigoUf;
 
@@ -39,4 +32,9 @@ public class MunicipioModel {
 	@Column(name = "STATUS", nullable = false, length = 3)
 	private Integer status;
 
+	public MunicipioModel (MunicipioDTO dadosMunicipio) {
+		this.codigoUf = new UfModel(dadosMunicipio.codigoUf());
+		this.nome = dadosMunicipio.nome();
+		this.status = dadosMunicipio.status();
+	}
 }

@@ -41,6 +41,10 @@ public class UfModel {
         this.status = dadosUf.status();
     }
 
+    public UfModel (Long codigoUf) {
+        this.codigoUf = codigoUf;
+    }
+
     public void atualizarInformacoes(AtualizacaoUfDTO dadosUf) {
         if (dadosUf.sigla() != null) {
             this.sigla = dadosUf.sigla();

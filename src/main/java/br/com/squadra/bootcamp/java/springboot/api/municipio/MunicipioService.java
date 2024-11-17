@@ -40,4 +40,25 @@ public class MunicipioService {
         return this.municipioRepository.findAll();
     }
 
+    public List<MunicipioModel> atualizarMunicipio(AtualizacaoMunicipioDTO dadosMunicipio) {
+
+        var existeCodigoMunicipio = this.municipioRepository.existsByCodigoMunicipio(dadosMunicipio.codigoMunicipio());
+        if (!existeCodigoMunicipio) {
+            throw new ValidacaoException("codigoMunicipio " + dadosMunicipio.codigoMunicipio() + " informado não existe", 404);
+        }
+
+        var atualizarMunicipio = this.municipioRepository.getReferenceById(dadosMunicipio.codigoMunicipio());
+
+        var existeMunicipioComCodigoUf = this.municipioRepository.existsByCodigoUf_CodigoUfAndNomeAndCodigoMunicipioNot(dadosMunicipio.codigoUf(), dadosMunicipio.nome(), dadosMunicipio.codigoMunicipio());
+        if (existeMunicipioComCodigoUf) {
+            throw new ValidacaoException("O Município " + dadosMunicipio.nome() + " com codigoUf " + dadosMunicipio.codigoUf() + " já existe", 404);
+        }
+
+        atualizarMunicipio.atualizarInformacoes(dadosMunicipio);
+        this.municipioRepository.save(atualizarMunicipio);
+
+        return this.municipioRepository.findAll();
+
+    }
+
 }

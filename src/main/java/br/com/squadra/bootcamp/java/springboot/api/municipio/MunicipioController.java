@@ -31,7 +31,15 @@ public class MunicipioController {
 		var cadastrarMunicipio = this.municipioService.cadastrarMunicipio(dadosMunicipio).stream().map(ListaMunicipioDTO::new).toList();
 
 		return ResponseEntity.status(200).body(cadastrarMunicipio);
+	}
 
+	@PutMapping
+	@Transactional
+	public ResponseEntity atualizarMunicipio(@RequestBody @Valid AtualizacaoMunicipioDTO dadosMunicipio) {
+
+		var atualizarMunicipio = this.municipioService.atualizarMunicipio(dadosMunicipio).stream().map(ListaMunicipioDTO::new).toList();
+
+		return ResponseEntity.status(200).body(atualizarMunicipio);
 	}
 
 }

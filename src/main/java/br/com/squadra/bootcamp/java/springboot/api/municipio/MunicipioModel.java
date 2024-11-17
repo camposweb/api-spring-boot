@@ -37,4 +37,17 @@ public class MunicipioModel {
 		this.nome = dadosMunicipio.nome();
 		this.status = dadosMunicipio.status();
 	}
+
+	public void  atualizarInformacoes(AtualizacaoMunicipioDTO dadosMunicipio) {
+		if (dadosMunicipio.codigoUf() != null) {
+			this.codigoUf = new UfModel(dadosMunicipio.codigoUf());
+		}
+
+		if (dadosMunicipio.nome() != null) {
+			this.nome = dadosMunicipio.nome();
+		}
+		if (dadosMunicipio.status() != 0) {
+			this.status = dadosMunicipio.status();
+		}
+	}
 }

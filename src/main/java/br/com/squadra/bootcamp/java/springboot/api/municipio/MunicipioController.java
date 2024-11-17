@@ -28,7 +28,7 @@ public class MunicipioController {
 	@Transactional
 	public ResponseEntity cadastrarMunicipio(@RequestBody @Valid MunicipioDTO dadosMunicipio) {
 
-		var cadastrarMunicipio = this.municipioService.cadastrarMunicipios(dadosMunicipio).stream().map(ListaMunicipioDTO::new).toList();
+		var cadastrarMunicipio = this.municipioService.cadastrarMunicipio(dadosMunicipio).stream().map(ListaMunicipioDTO::new).toList();
 
 		return ResponseEntity.status(200).body(cadastrarMunicipio);
 

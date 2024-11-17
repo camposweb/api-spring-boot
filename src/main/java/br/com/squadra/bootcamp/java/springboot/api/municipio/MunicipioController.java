@@ -42,5 +42,14 @@ public class MunicipioController {
 		return ResponseEntity.status(200).body(atualizarMunicipio);
 	}
 
+	@DeleteMapping
+	@Transactional
+	public ResponseEntity deletarMunicipio(@RequestBody @Valid DeletarMunicipioDTO dadosMunicipio) {
+
+		var deletarMunicipio = this.municipioService.deletarMunicipio(dadosMunicipio).stream().map(ListaMunicipioDTO::new).toList();
+
+		return ResponseEntity.status(200).body(deletarMunicipio);
+	}
+
 }
 

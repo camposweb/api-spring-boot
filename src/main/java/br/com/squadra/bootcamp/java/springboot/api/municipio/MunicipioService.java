@@ -61,4 +61,16 @@ public class MunicipioService {
 
     }
 
+    public List<MunicipioModel> deletarMunicipio(DeletarMunicipioDTO dadosMunicipio) {
+
+        var existeCodigoMunicipio = this.municipioRepository.existsByCodigoMunicipio(dadosMunicipio.codigoMunicipio());
+        if (!existeCodigoMunicipio) {
+            throw new ValidacaoException("Município com o código " + dadosMunicipio.codigoMunicipio() + " não existe", 404);
+        }
+
+        this.municipioRepository.deleteById(dadosMunicipio.codigoMunicipio());
+
+        return this.municipioRepository.findAll();
+    }
+
 }

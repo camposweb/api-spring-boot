@@ -38,6 +38,10 @@ public class MunicipioModel {
 		this.status = dadosMunicipio.status();
 	}
 
+	public MunicipioModel(Long codigoMunicipio) {
+		this.codigoMunicipio = codigoMunicipio;
+	}
+
 	public void  atualizarInformacoes(AtualizacaoMunicipioDTO dadosMunicipio) {
 		if (dadosMunicipio.codigoUf() != null) {
 			this.codigoUf = new UfModel(dadosMunicipio.codigoUf());

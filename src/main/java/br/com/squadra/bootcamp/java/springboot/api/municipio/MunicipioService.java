@@ -1,6 +1,7 @@
 package br.com.squadra.bootcamp.java.springboot.api.municipio;
 
 import java.util.List;
+import java.util.Optional;
 
 import br.com.squadra.bootcamp.java.springboot.api.infra.exception.ValidacaoException;
 import br.com.squadra.bootcamp.java.springboot.api.uf.IUfRepository;
@@ -17,8 +18,30 @@ public class MunicipioService {
     @Autowired
     private IUfRepository ufRepository;
 
-    public List<MunicipioModel> listarMunicipios() {
+    public List<MunicipioModel> listarTodosMunicipios() {
         return this.municipioRepository.findAll();
+    }
+
+    public List<MunicipioModel> listarMunicipiosPorParametros(
+            Optional<Long> codigoMunicipio,
+            Optional<Long> codigoUf,
+            Optional<String> nome,
+            Optional<Integer> status
+    ) {
+
+        if (codigoMunicipio.isPresent()) {
+            return this.municipioRepository.findByCodigoMunicipio(codigoMunicipio.get());
+        } else if (codigoUf.isPresent()) {
+            return this.municipioRepository.findByCodigoUf_CodigoUf(codigoUf.get());
+        } else if (nome.isPresent()) {
+            return this.municipioRepository.findByNome(nome.get());
+        } else if (status.isPresent()) {
+            return this.municipioRepository.findByStatus(status.get());
+        } else {
+                return this.municipioRepository.findAll();
+            }
+
+
     }
 
     public List<MunicipioModel> cadastrarMunicipio(MunicipioDTO dadosMunicipio) {

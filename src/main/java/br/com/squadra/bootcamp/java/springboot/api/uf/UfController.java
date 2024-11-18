@@ -59,8 +59,11 @@ public class UfController {
                     return ResponseEntity.ok().body(resultadoVazio ? new ArrayList<>() : resultado);
                 }
 
-                if (sigla.isPresent()) {
-                    var resultado = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).findFirst();
+                if (sigla.isPresent()) {                    var resultado = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).findFirst();
+                    var somenteTexto = sigla.get().matches("^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$");
+                    if (!somenteTexto) {
+                        throw new ValidacaoException("O parâmetro nome deve conter apenas letras", 404);
+                    }
 
                     var resultadoVazio = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList().isEmpty();
 
@@ -68,6 +71,10 @@ public class UfController {
                 }
 
                 if (nome.isPresent()) {
+                    var somenteTexto = nome.get().matches("^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$");
+                    if (!somenteTexto) {
+                        throw new ValidacaoException("O parâmetro nome deve conter apenas letras", 404);
+                    }
                     if ((status.get() < 1 || status.get() > 2)) {
                         return ResponseEntity.ok().body(new ArrayList<>());
                     }
@@ -97,15 +104,13 @@ public class UfController {
                     return ResponseEntity.ok().body(resultadoVazio ? new ArrayList<>() : resultado);
                 }
 
-                
-
 
                 if ((codigoUf.isPresent() || sigla.isPresent() || nome.isPresent()) && status.isPresent()) {
                     var listaComStatusEOutroParametro = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).findFirst();
                     return ResponseEntity.ok().body(listaComStatusEOutroParametro);
                 }
 
-                
+
                  //listarTodasUfs = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList();
                  
             }

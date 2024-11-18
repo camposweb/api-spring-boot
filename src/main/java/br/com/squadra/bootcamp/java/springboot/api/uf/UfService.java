@@ -21,6 +21,10 @@ public class UfService {
         return this.ufRepository.findAll();
     }
 
+    public Boolean existeNomeEStatus(String nome, Integer status){
+        return this.ufRepository.existsByNomeAndStatus(nome, status);
+    }
+
     public List<UfModel> listarUfsPorParametros(
         Optional<Long> codigoUf,
         Optional<String> sigla,
@@ -93,6 +97,8 @@ public class UfService {
         }
 
        this.ufRepository.deleteById(dadosUf.codigoUf());
+        //var inativarUf = this.ufRepository.getReferenceById(dadosUf.codigoUf());
+        //inativarUf.inativar();
 
 
         return this.ufRepository.findAll();

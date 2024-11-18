@@ -1,13 +1,12 @@
 package br.com.squadra.bootcamp.java.springboot.api.municipio;
 
-import java.util.List;
-import java.util.Optional;
-
 import br.com.squadra.bootcamp.java.springboot.api.infra.exception.ValidacaoException;
 import br.com.squadra.bootcamp.java.springboot.api.uf.IUfRepository;
-import br.com.squadra.bootcamp.java.springboot.api.uf.UfModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MunicipioService {

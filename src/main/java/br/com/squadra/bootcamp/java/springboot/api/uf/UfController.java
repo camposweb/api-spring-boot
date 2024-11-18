@@ -51,6 +51,12 @@ public class UfController {
                     throw new ValidacaoException("Parâmetro " + parametro + " inválido -> Opções codigoUf | sigla | nome | status inscritos exatamente como esá descrito ", 404);
                 }
 
+                if (status.get() < 1 || status.get() > 2) {
+                    throw new ValidacaoException("O parâmetro status aceita somente o valor 1 ou 2", 404);
+                }
+
+
+
                 if (codigoUf.isPresent()) {
                     var resultado = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).findFirst();
 
@@ -59,12 +65,19 @@ public class UfController {
                     return ResponseEntity.ok().body(resultadoVazio ? new ArrayList<>() : resultado);
                 }
 
-                if (sigla.isPresent()) {                    var resultado = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).findFirst();
+                if (sigla.isPresent()) {
+
                     var somenteTexto = sigla.get().matches("^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$");
                     if (!somenteTexto) {
                         throw new ValidacaoException("O parâmetro nome deve conter apenas letras", 404);
                     }
 
+                    var resultado = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).findFirst();
+
+                    /*if (!this.ufRepository.existsBySiglaAndStatus(sigla.get(), status.get())) {
+                        return ResponseEntity.ok().body(new ArrayList<>());
+                    }
+*/
                     var resultadoVazio = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList().isEmpty();
 
                     return ResponseEntity.ok().body(resultadoVazio ? new ArrayList<>() : resultado);
@@ -75,15 +88,12 @@ public class UfController {
                     if (!somenteTexto) {
                         throw new ValidacaoException("O parâmetro nome deve conter apenas letras", 404);
                     }
-                    if ((status.get() < 1 || status.get() > 2)) {
+
+                    var existeNomeEStatus = this.ufService.existeNomeEStatus(nome.get(), status.get());
+                    if (!existeNomeEStatus) {
                         return ResponseEntity.ok().body(new ArrayList<>());
                     }
 
-                    var s = this.ufRepository.existsByNomeAndStatus(nome.get(), status.get());
-                    if (!s) {
-                        return ResponseEntity.ok().body(new ArrayList<>());
-                    }
-                    
                     var resultado = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).findFirst();
 
                     var resultadoVazio = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList().isEmpty();
@@ -91,10 +101,7 @@ public class UfController {
                     return ResponseEntity.ok().body(resultadoVazio ? new ArrayList<>() : resultado);
                 }
 
-                if (status.get() < 1 || status.get() > 2) {
-                    //var resultadoVazio = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList().isEmpty();
-                    return ResponseEntity.ok().body(Map.of("mensagem", "Status tem valor 1 ou 2"));
-                }
+
 
                 if (status.isPresent()) {
                     var resultado = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList();
@@ -105,10 +112,13 @@ public class UfController {
                 }
 
 
-                if ((codigoUf.isPresent() || sigla.isPresent() || nome.isPresent()) && status.isPresent()) {
+                /*if ((codigoUf.isPresent() || sigla.isPresent() || nome.isPresent()) && status.isPresent()) {
+                    if (!this.ufRepository.existsByCodigoUfOrSiglaOrNomeAndStatus(codigoUf.get(), sigla.get(), nome.get(), status.get())) {
+                        return ResponseEntity.ok().body(new ArrayList<>());
+                    }
                     var listaComStatusEOutroParametro = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).findFirst();
                     return ResponseEntity.ok().body(listaComStatusEOutroParametro);
-                }
+                }*/
 
 
                  //listarTodasUfs = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList();

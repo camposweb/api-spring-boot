@@ -57,10 +57,10 @@ public class UfModel {
         }
     }
 
-    public void alterarStatus(AtualizacaoUfDTO dadosUf) {
-        if (dadosUf.status() != 0) {
-            this.status = dadosUf.status();
-        }
+    public void inativar() {
+
+            this.status = 2;
+
     }
 
 }

@@ -21,7 +21,7 @@ public class MunicipioController {
 
 	@GetMapping
 	public ResponseEntity listarMunicipiosPorParametros(
-			@RequestParam(required = false) Map<String, UfModel> parametros,
+			@RequestParam(required = false) Map<String, MunicipioModel> parametros,
 			@RequestParam(required = false) Optional<Long> codigoMunicipio,
 			@RequestParam(required = false) Optional<Long> codigoUf,
 			@RequestParam(required = false) Optional<String> nome,
@@ -66,7 +66,7 @@ public class MunicipioController {
 
 			if (status.isPresent()) {
 				if (status.get() < 1 || status.get() > 2) {
-					return ResponseEntity.ok().body(new ArrayList<>());
+					throw new ValidacaoException("O parâmetro status aceita somente o valor 1 - ATIVADO ou 2 - DESATIVADO", 404);
 				}
 
 				var resultado = this.municipioService.listarMunicipiosPorParametros(codigoMunicipio, codigoUf, nome, status).stream().map(ListaMunicipioDTO::new).toList();

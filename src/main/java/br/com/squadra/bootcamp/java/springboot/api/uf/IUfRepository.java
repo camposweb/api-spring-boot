@@ -13,11 +13,15 @@ public interface IUfRepository extends JpaRepository<UfModel, Long> {
 
     Boolean existsBySigla(String siglaUf);
 
+    Boolean existsBySiglaAndStatus(String sigla, Integer status);
+
     Boolean existsByNome(String nome);
     
     Boolean existsBySiglaAndCodigoUfNot(String sigla, Long codigoUf);
 
     Boolean existsByStatus(Integer valor);
+
+    Boolean existsByCodigoUfOrSiglaOrNomeAndStatus(Long codigoUf, String sigla, String nome, Integer status);
 
     Boolean existsByNomeAndStatus(String nome, Integer status);
 

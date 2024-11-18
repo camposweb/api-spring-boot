@@ -9,6 +9,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.Map;
 
@@ -30,8 +31,9 @@ public class TratamentoDeErros {
 
     @ExceptionHandler(ValidacaoException.class)
     public ResponseEntity tratarErroRegraDeNegocio(ValidacaoException ex) {
+        Integer status = ex.getStatus();
         String mensagemErro = ex.getMessage();
-        var error = Map.of("mensagem", mensagemErro, "status", ex.getStatus());
+        var error = Map.of("mensagem", mensagemErro, "status", status);
         return ResponseEntity.status(404).body(error);
     }
 
@@ -40,16 +42,41 @@ public class TratamentoDeErros {
         Throwable causa = ex.getCause();
         var mensagemErro = Map.of("mensagem", "A estrutura JSON da requisição está incorreta", "status", 404);
 
-
         if (causa instanceof UnrecognizedPropertyException e) {
             String campoInexistente = e.getPropertyName();
             mensagemErro = Map.of("mensagem", "O campo '" + campoInexistente + "' não existe nesta estrutura JSON", "status", 404);
-
-
         }
+
+
+
+
         return ResponseEntity.status(404).body(mensagemErro);
     }
 
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity tratarMethodArgumentType(MethodArgumentTypeMismatchException ex) {
+
+        String campo = "";
+
+        var campoLong = ex.getCause().getMessage().contains("RequestParam java.lang.Long");
+        if (campoLong) {
+            campo = "numérico";
+        }
+
+        var campoString = ex.getCause().getMessage().contains("RequestParam java.lang.String");
+        if (campoString) {
+            campo = "texto(String)";
+        }
+
+        var campoInteger = ex.getCause().getMessage().contains("RequestParam java.lang.Integer");
+        if (campoInteger) {
+            campo = "numérico";
+        }
+
+        var error = Map.of("mensagem", "O parâmetro " + ex.getParameter().getParameter().getName() + " não é do tipo correto -> O campo deve ser do tipo " + campo, "status", 404);
+
+        return ResponseEntity.status(404).body(error);
+    }
 
     /* @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity tratarErroBadCredentials() {

@@ -1,10 +1,10 @@
 package br.com.squadra.bootcamp.java.springboot.api.bairro;
 
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/bairro")
@@ -18,4 +18,15 @@ public class BairroController {
         var bairros = this.bairroService.listarBairros().stream().map(ListaBairroDTO::new).toList();
         return ResponseEntity.ok().body(bairros);
     }
+
+    @PostMapping
+    @Transactional
+    public ResponseEntity cadastrarBairro(@RequestBody @Valid BairroDTO dadosBairro) {
+
+        var cadastrarBairro = this.bairroService.cadastrarBairro(dadosBairro).stream().map(ListaBairroDTO::new).toList();
+
+        return ResponseEntity.ok().body(cadastrarBairro);
+    }
+
+
 }

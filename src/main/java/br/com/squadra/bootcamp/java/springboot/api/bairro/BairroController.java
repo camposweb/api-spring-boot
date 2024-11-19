@@ -28,5 +28,13 @@ public class BairroController {
         return ResponseEntity.ok().body(cadastrarBairro);
     }
 
+    @DeleteMapping
+    @Transactional
+    public ResponseEntity deletarBairro(@RequestBody @Valid DeletarBairroDTO dadosBairro) {
+
+        var deletarBairro = this.bairroService.deletarBairro(dadosBairro).stream().map(ListaBairroDTO::new).toList();
+
+        return ResponseEntity.status(200).body(deletarBairro);
+    }
 
 }

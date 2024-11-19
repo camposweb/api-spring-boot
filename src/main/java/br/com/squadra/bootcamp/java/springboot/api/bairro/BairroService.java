@@ -39,5 +39,16 @@ public class BairroService {
 
     }
 
+    public List<BairroModel> deletarBairro(DeletarBairroDTO dadosBairro) {
+
+        var existeCodigoBairro = this.bairroRepository.existsByCodigoBairro(dadosBairro.codigoBairro());
+        if (!existeCodigoBairro) {
+            throw new ValidacaoException("Bairro com o código " + dadosBairro.codigoBairro() + " não existe", 404);
+        }
+
+        this.bairroRepository.deleteById(dadosBairro.codigoBairro());
+
+        return this.bairroRepository.findAll();
+    }
 
 }

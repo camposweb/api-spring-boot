@@ -39,8 +39,17 @@ public class TratamentoDeErros {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity tratarErroCampoInexistente(HttpMessageNotReadableException ex) {
+
+        var campo = "";
+
+        var campoLong = ex.getCause().getMessage().contains("Cannot deserialize value of type `java.lang.Long` from String");
+        if (campoLong) {
+            campo = "numérico";
+        }
+
         Throwable causa = ex.getCause();
-        var mensagemErro = Map.of("mensagem", "A estrutura JSON da requisição está incorreta", "status", 404);
+        var mensagemErro = Map.of("mensagem", "A estrutura JSON da requisição está incorreta -> O campo deve ser do tipo " + campo, "status", 404);
+
 
         if (causa instanceof UnrecognizedPropertyException e) {
             String campoInexistente = e.getPropertyName();

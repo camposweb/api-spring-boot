@@ -23,7 +23,57 @@ public class BairroService {
         return this.bairroRepository.findAll();
     }
 
+    public Optional<BairroModel> buscarPorCodigoBairro(Long codigoBairro) {
+        return this.bairroRepository.findByCodigoBairro(codigoBairro);
+    }
 
+    public List<BairroModel> listarTodosBairrosPorParametros(
+            Optional<Long> codigoBairro,
+            Optional<Long> codigoMunicipio,
+            Optional<String> nome,
+            Optional<Integer> status
+    ){
+
+        Specification<BairroModel> listaBairroParametros = Specification.where(null);
+
+        if (codigoBairro.isPresent()) {
+            if (this.bairroRepository.count((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("codigoBairro"), codigoBairro.get())) == 0) {
+                return Collections.emptyList();
+            }
+            listaBairroParametros = listaBairroParametros.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("codigoBairro"), codigoBairro.get()));
+        }
+
+        if (codigoMunicipio.isPresent()) {
+            if (this.bairroRepository.count((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("codigoMunicipio").get("codigoMunicipio"), codigoMunicipio.get())) == 0) {
+                return Collections.emptyList();
+            }
+            listaBairroParametros = listaBairroParametros.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("codigoMunicipio").get("codigoMunicipio"), codigoMunicipio.get()));
+        }
+
+        if (nome.isPresent()) {
+            if (this.bairroRepository.count((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(criteriaBuilder.lower(root.get("nome")), nome.get().toLowerCase())) == 0) {
+                return Collections.emptyList();
+            }
+            listaBairroParametros = listaBairroParametros.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(criteriaBuilder.lower(root.get("nome")), nome.get().toLowerCase()));
+        }
+
+        if (status.isPresent()) {
+            if (this.bairroRepository.count((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("status"), status.get())) == 0) {
+                return Collections.emptyList();
+            }
+            listaBairroParametros = listaBairroParametros.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("status"), status.get()));
+        }
+
+        return this.bairroRepository.findAll(listaBairroParametros);
+    }
 
     public List<BairroModel> cadastrarBairro(BairroDTO dadosBairro) {
 

@@ -15,4 +15,6 @@ public interface IBairroRepository extends JpaRepository<BairroModel, Long>, Jpa
 
     Boolean existsByCodigoMunicipio_CodigoMunicipioAndNomeAndCodigoBairroNot(Long codigoMunicipio, String nome, Long codigoBairro);
 
+    Optional<BairroModel> findByCodigoBairro(Long codigoBairro);
+
 }

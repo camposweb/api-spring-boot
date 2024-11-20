@@ -69,6 +69,11 @@ public class MunicipioService {
             throw new ValidacaoException("codigoMunicipio " + dadosMunicipio.codigoMunicipio() + " informado não existe", 404);
         }
 
+        var existeCodigoUf = this.ufRepository.existsByCodigoUf(dadosMunicipio.codigoUf());
+        if (!existeCodigoUf) {
+            throw new ValidacaoException("codigoUf " + dadosMunicipio.codigoUf() + " informado não existe", 404);
+        }
+
         var atualizarMunicipio = this.municipioRepository.getReferenceById(dadosMunicipio.codigoMunicipio());
 
         var existeMunicipioComCodigoUf = this.municipioRepository.existsByCodigoUf_CodigoUfAndNomeAndCodigoMunicipioNot(dadosMunicipio.codigoUf(), dadosMunicipio.nome(), dadosMunicipio.codigoMunicipio());

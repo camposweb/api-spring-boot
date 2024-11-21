@@ -1,7 +1,6 @@
 package br.com.squadra.bootcamp.java.springboot.api.municipio;
 
 import br.com.squadra.bootcamp.java.springboot.api.infra.exception.ValidacaoException;
-import br.com.squadra.bootcamp.java.springboot.api.uf.UfModel;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

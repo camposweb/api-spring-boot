@@ -5,5 +5,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IPessoRepository extends JpaRepository<PessoaModel, Long>, JpaSpecificationExecutor<PessoaModel> {
+public interface IPessoaRepository extends JpaRepository<PessoaModel, Long>, JpaSpecificationExecutor<PessoaModel> {
+
+    Boolean existsByLogin(String login);
 }

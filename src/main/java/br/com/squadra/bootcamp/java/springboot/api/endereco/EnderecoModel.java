@@ -1,6 +1,5 @@
 package br.com.squadra.bootcamp.java.springboot.api.endereco;
 
-
 import br.com.squadra.bootcamp.java.springboot.api.bairro.BairroModel;
 import br.com.squadra.bootcamp.java.springboot.api.pessoa.PessoaModel;
 import jakarta.persistence.*;
@@ -20,7 +19,7 @@ public class EnderecoModel {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQUENCE_ENDERECO")
     @SequenceGenerator(name = "SEQUENCE_ENDERECO", sequenceName = "SEQUENCE_ENDERECO", allocationSize = 1)
-    @Column(name = "CODIGO_ENDERECO",  nullable = false, length = 9)
+    @Column(name = "CODIGO_ENDERECO", nullable = false, length = 9)
     private Long codigoEndereco;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,5 +41,14 @@ public class EnderecoModel {
 
     @Column(name = "CEP", nullable = false, length = 10)
     private String cep;
+
+    public EnderecoModel(PessoaModel pessoa,EnderecoDTO dadosEndereco) {
+        this.codigoPessoa = pessoa;
+        this.codigoBairro = new BairroModel(dadosEndereco.codigoBairro());
+        this.nomeRua = dadosEndereco.nomeRua();
+        this.numero = dadosEndereco.numero();
+        this.complemento = dadosEndereco.complemento();
+        this.cep = dadosEndereco.cep();
+    }
 
 }

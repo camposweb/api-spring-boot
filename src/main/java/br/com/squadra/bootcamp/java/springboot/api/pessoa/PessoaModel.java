@@ -39,7 +39,23 @@ public class PessoaModel {
     @Column(name = "STATUS", nullable = false, length = 1)
     private Integer status;
 
-    @OneToMany(mappedBy = "codigoPessoa", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private List<EnderecoModel> endereco;
+    @OneToMany(mappedBy = "codigoPessoa", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EnderecoModel> enderecos;
+
+    public PessoaModel(Long codigoPessoa) {
+        this.codigoPessoa = codigoPessoa;
+    }
+
+    public PessoaModel(PessoaDTO dadosPessoa) {
+        this.nome = dadosPessoa.nome();
+        this.sobrenome = dadosPessoa.sobrenome();
+        this.idade = dadosPessoa.idade();
+        this.login = dadosPessoa.login();
+        this.senha = dadosPessoa.senha();
+        this.status = dadosPessoa.status();
+        //this.enderecos = new EnderecoModel(dadosPessoa.enderecos().stream().map(dadosEndereco -> new EnderecoModel(dadosEndereco)).toList());
+        this.enderecos = dadosPessoa.enderecos().stream().map(dadosEndereco -> new EnderecoModel(this, dadosEndereco)).toList();
+    }
+    
 
 }

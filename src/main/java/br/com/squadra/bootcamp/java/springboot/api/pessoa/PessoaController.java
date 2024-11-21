@@ -28,4 +28,12 @@ public class PessoaController {
 
         return ResponseEntity.ok().body(cadastrarPessoa);
     }
+
+    @DeleteMapping
+    @Transactional
+    public ResponseEntity deletarPessoa(@RequestBody @Valid DeletarPessoaDTO dadosPessoa) {
+
+        var deletarPessoa = this.pessoaService.deletarPessoa(dadosPessoa).stream().map(ListaPessoaDTO::new).toList();
+        return ResponseEntity.ok().body(deletarPessoa);
+    }
 }

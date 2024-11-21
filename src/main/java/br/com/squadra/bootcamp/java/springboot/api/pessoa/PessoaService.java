@@ -39,4 +39,18 @@ public class PessoaService {
 
         return this.pessoaRepository.findAll();
     }
+
+    public List<PessoaModel> deletarPessoa(DeletarPessoaDTO dadosPessoa) {
+
+        var existePessoa = this.pessoaRepository.existsByCodigoPessoa(dadosPessoa.codigoPessoa());
+        if (!existePessoa) {
+            throw new ValidacaoException("A pessoa com o código " + dadosPessoa.codigoPessoa() + " não existe", 404);
+        }
+
+
+        this.pessoaRepository.deleteById(dadosPessoa.codigoPessoa());
+
+        return this.pessoaRepository.findAll();
+    }
+
 }

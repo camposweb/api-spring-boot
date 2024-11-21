@@ -2,6 +2,7 @@ package br.com.squadra.bootcamp.java.springboot.api.infra.exception;
 
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.UnexpectedTypeException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -56,9 +57,6 @@ public class TratamentoDeErros {
             mensagemErro = Map.of("mensagem", "O campo '" + campoInexistente + "' não existe nesta estrutura JSON", "status", 404);
         }
 
-
-
-
         return ResponseEntity.status(404).body(mensagemErro);
     }
 
@@ -83,6 +81,27 @@ public class TratamentoDeErros {
         }
 
         var error = Map.of("mensagem", "O parâmetro " + ex.getParameter().getParameter().getName() + " não é do tipo correto -> O campo deve ser do tipo " + campo, "status", 404);
+
+        return ResponseEntity.status(404).body(error);
+    }
+
+    @ExceptionHandler(UnexpectedTypeException.class)
+    public ResponseEntity tratarUnexpectedType(UnexpectedTypeException ex) {
+
+        String campo = "";
+
+        var campoLong = ex.getMessage().contains("No validator could be found for constraint 'jakarta.validation.constraints.Pattern' validating type 'java.lang.Long'");
+        if (campoLong) {
+            campo = "numérico";
+        }
+
+        var campoString = ex.getMessage().contains("No validator could be found for constraint 'jakarta.validation.constraints.Pattern' validating type 'java.lang.String'");
+        if (campoString) {
+            campo = "string";
+        }
+
+
+        var error = Map.of("mensagem", "O parâmetro " + ex.getMessage() + " deve ser do tipo " + campo, "status", 404);
 
         return ResponseEntity.status(404).body(error);
     }

@@ -3,8 +3,10 @@ package br.com.squadra.bootcamp.java.springboot.api.uf;
 import br.com.squadra.bootcamp.java.springboot.api.infra.exception.ValidacaoException;
 import br.com.squadra.bootcamp.java.springboot.api.uf.validacoes.cadastro.ValidadorCadastroUf;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,28 +23,69 @@ public class UfService {
         return this.ufRepository.findAll();
     }
 
-    public Boolean existeNomeEStatus(String nome, Integer status){
-        return this.ufRepository.existsByNomeAndStatus(nome, status);
+
+    public  Optional<UfModel> buscarPorCodigoUf(Long codigoBairro) {
+        return this.ufRepository.findByCodigoUf(codigoBairro);
     }
 
-    public List<UfModel> listarUfsPorParametros(
+    public Optional<UfModel> buscarPorSigla(String sigla) {
+        return this.ufRepository.findBySigla(sigla);
+    }
+
+    public  Optional<UfModel> buscarPorNome(String nome) {
+        return this.ufRepository.findByNome(nome);
+    }
+
+    public Optional<UfModel> buscarPorCodigoUfSiglaNome(Long codigoUf, String sigla, String nome) {
+        return this.ufRepository.findByCodigoUfAndSiglaAndNome(codigoUf, sigla, nome);
+    }
+
+    public List<UfModel> listarTodasUfsPorParametros(
         Optional<Long> codigoUf,
         Optional<String> sigla,
         Optional<String> nome,
         Optional<Integer> status
     ) {
+
+        Specification<UfModel> listarUfParametros = Specification.where(null);
         
         if (codigoUf.isPresent()) {
-            return this.ufRepository.findByCodigoUf(codigoUf.get());
-        } else if (sigla.isPresent()) {
-            return this.ufRepository.findBySigla(sigla.get());
-        } else if (nome.isPresent()) {
-            return this.ufRepository.findByNome(nome.get());
-        } else if (status.isPresent()) {
-            return this.ufRepository.findByStatus(status.get());
-        } else {
-            return this.ufRepository.findAll();
+            if (this.ufRepository.count((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("codigoUf"), codigoUf.get())) == 0) {
+                return Collections.emptyList();
+            }
+            listarUfParametros = listarUfParametros.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("codigoBairro"), codigoUf.get()));
         }
+
+        if (sigla.isPresent()) {
+            if (this.ufRepository.count((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(criteriaBuilder.lower(root.get("sigla")), sigla.get().toLowerCase())) == 0) {
+                return Collections.emptyList();
+            }
+            listarUfParametros = listarUfParametros.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(criteriaBuilder.lower(root.get("sigla")), sigla.get().toLowerCase()));
+        }
+
+        if (nome.isPresent()) {
+            if (this.ufRepository.count((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(criteriaBuilder.lower(root.get("nome")), nome.get().toLowerCase())) == 0) {
+                return Collections.emptyList();
+            }
+            listarUfParametros = listarUfParametros.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(criteriaBuilder.lower(root.get("nome")), nome.get().toLowerCase()));
+        }
+
+        if (status.isPresent()) {
+            if (this.ufRepository.count((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("status"), status.get())) == 0) {
+                return Collections.emptyList();
+            }
+            listarUfParametros = listarUfParametros.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("status"), status.get()));
+        }
+
+        return this.ufRepository.findAll(listarUfParametros);
     }
 
     public List<UfModel> cadastrarUf(UfDTO dadosUf) {

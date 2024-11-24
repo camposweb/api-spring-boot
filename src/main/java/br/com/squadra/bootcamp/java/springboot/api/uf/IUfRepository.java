@@ -4,39 +4,28 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IUfRepository extends JpaRepository<UfModel, Long> {
+public interface IUfRepository extends JpaRepository<UfModel, Long>, JpaSpecificationExecutor<UfModel> {
 
     Boolean existsByCodigoUf(Long codigoUf);
 
     Boolean existsBySigla(String siglaUf);
 
-    Boolean existsBySiglaAndStatus(String sigla, Integer status);
-
     Boolean existsByNome(String nome);
     
     Boolean existsBySiglaAndCodigoUfNot(String sigla, Long codigoUf);
 
-    Boolean existsByStatus(Integer valor);
-
-    Boolean existsByCodigoUfOrSiglaOrNomeAndStatus(Long codigoUf, String sigla, String nome, Integer status);
-
-    Boolean existsByNomeAndStatus(String nome, Integer status);
-
-    List<UfModel> findByCodigoUf(Long codigoUf);
-
-    List<UfModel> findBySigla(String siglaUf);
-
-    List<UfModel> findByNome(String nomeUf);
-
-    List<UfModel> findByStatus(Integer integer);
-
-    Optional<UfModel> findByNomeAndStatus(String nome, Integer status);
-
     Boolean existsBySiglaAndNome(String sigla,String nome);
 
-    
+    Optional<UfModel> findByCodigoUf(Long codigoUf);
+
+    Optional<UfModel> findBySigla(String siglaUf);
+
+    Optional<UfModel> findByNome(String nome);
+
+    Optional<UfModel> findByCodigoUfAndSiglaAndNome(Long codigoUf, String sigla, String nome);
 
 }

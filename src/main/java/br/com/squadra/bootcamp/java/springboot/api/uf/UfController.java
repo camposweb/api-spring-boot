@@ -1,10 +1,6 @@
 package br.com.squadra.bootcamp.java.springboot.api.uf;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,104 +31,79 @@ public class UfController {
     private static final Set<String> PARAMETROS_VALIDOS = Set.of("codigoUf", "sigla", "nome", "status");
 
     @GetMapping
-    public ResponseEntity listarPorParametrosOpcionais(
-        @RequestParam(required = false) Map<String, UfModel> parametros,
-        @RequestParam(required = false) Optional<Long> codigoUf,
-        @RequestParam(required = false) Optional<String> sigla,
-        @RequestParam(required = false) Optional<String> nome,
-        @RequestParam(required = false) Optional<Integer> status
-        ) {
+    public ResponseEntity listarUfs(
+            @RequestParam(required = false) Map<String, UfModel> parametros,
+            @RequestParam(required = false) Optional<Long> codigoUf,
+            @RequestParam(required = false) Optional<String> sigla,
+            @RequestParam(required = false) Optional<String> nome,
+            @RequestParam(required = false) Optional<Integer> status
+    ) {
 
-        List<ListaUfDTO> listarTodasUfs = this.ufService.listarTodasUfs().stream().map(ListaUfDTO::new).toList();
-
-            for (String parametro : parametros.keySet()) {
-                if (!PARAMETROS_VALIDOS.contains(parametro)) {
-                    throw new ValidacaoException("Parâmetro " + parametro + " inválido -> Opções codigoUf | sigla | nome | status inscritos exatamente como esá descrito ", 404);
-                }
-
-                if (status.get() < 1 || status.get() > 2) {
-                    throw new ValidacaoException("O parâmetro status aceita somente o valor 1 ou 2", 404);
-                }
-
-
-
-                if (codigoUf.isPresent()) {
-                    var resultado = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).findFirst();
-
-                    var resultadoVazio = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList().isEmpty();
-
-                    return ResponseEntity.ok().body(resultadoVazio ? new ArrayList<>() : resultado);
-                }
-
-                if (sigla.isPresent()) {
-
-                    var somenteTexto = sigla.get().matches("^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$");
-                    if (!somenteTexto) {
-                        throw new ValidacaoException("O parâmetro nome deve conter apenas letras", 404);
-                    }
-
-                    var resultado = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).findFirst();
-
-                    /*if (!this.ufRepository.existsBySiglaAndStatus(sigla.get(), status.get())) {
-                        return ResponseEntity.ok().body(new ArrayList<>());
-                    }
-*/
-                    var resultadoVazio = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList().isEmpty();
-
-                    return ResponseEntity.ok().body(resultadoVazio ? new ArrayList<>() : resultado);
-                }
-
-                if (nome.isPresent()) {
-                    var somenteTexto = nome.get().matches("^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$");
-                    if (!somenteTexto) {
-                        throw new ValidacaoException("O parâmetro nome deve conter apenas letras", 404);
-                    }
-
-                    var existeNomeEStatus = this.ufService.existeNomeEStatus(nome.get(), status.get());
-                    if (!existeNomeEStatus) {
-                        return ResponseEntity.ok().body(new ArrayList<>());
-                    }
-
-                    var resultado = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).findFirst();
-
-                    var resultadoVazio = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList().isEmpty();
-
-                    return ResponseEntity.ok().body(resultadoVazio ? new ArrayList<>() : resultado);
-                }
-
-
-
-                if (status.isPresent()) {
-                    var resultado = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList();
-
-                    var resultadoVazio = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList().isEmpty();
-
-                    return ResponseEntity.ok().body(resultadoVazio ? new ArrayList<>() : resultado);
-                }
-
-
-                /*if ((codigoUf.isPresent() || sigla.isPresent() || nome.isPresent()) && status.isPresent()) {
-                    if (!this.ufRepository.existsByCodigoUfOrSiglaOrNomeAndStatus(codigoUf.get(), sigla.get(), nome.get(), status.get())) {
-                        return ResponseEntity.ok().body(new ArrayList<>());
-                    }
-                    var listaComStatusEOutroParametro = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).findFirst();
-                    return ResponseEntity.ok().body(listaComStatusEOutroParametro);
-                }*/
-
-
-                 //listarTodasUfs = this.ufService.listarUfsPorParametros(codigoUf, sigla, nome, status).stream().map(ListaUfDTO::new).toList();
-                 
+        for (String parametro : parametros.keySet()) {
+            if (!PARAMETROS_VALIDOS.contains(parametro)) {
+                throw new ValidacaoException("Parâmetro " + parametro + " inválido -> Opções codigoUf | sigla | nome | status inscritos exatamente como esá descrito ", 404);
             }
 
-            return ResponseEntity.ok().body(listarTodasUfs);
         }
+
+
+        if (sigla.isPresent() && !sigla.get().matches("^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$")) {
+            throw new ValidacaoException("O parâmetro silgla deve conter apenas letras", 404);
+        }
+
+        if (nome.isPresent() && !nome.get().matches("^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$")) {
+            throw new ValidacaoException("O parâmetro nome deve conter apenas letras", 404);
+        }
+
+        if (status.isPresent() && (status.get() < 1 || status.get() > 2)) {
+            throw new ValidacaoException("O parâmetro status aceita somente o valor 1 - ATIVADO ou 2 - DESATIVADO", 404);
+        }
+
+        if (codigoUf.isPresent()) {
+            Optional<UfModel> codigoUfEncontrado = this.ufService.buscarPorCodigoUf(codigoUf.get());
+
+            if (codigoUfEncontrado.isEmpty()) {
+                return ResponseEntity.ok().body(Collections.emptyList());
+            }
+
+            return ResponseEntity.ok().body(new ListaUfDTO(codigoUfEncontrado.get()));
+        }
+
+        if (sigla.isPresent()) {
+            Optional<UfModel> siglaEncontrada = this.ufService.buscarPorSigla(sigla.get());
+
+            if (siglaEncontrada.isEmpty()) {
+                return ResponseEntity.ok().body(Collections.emptyList());
+            }
+
+            return ResponseEntity.ok().body(new ListaUfDTO(siglaEncontrada.get()));
+        }
+
+        if (nome.isPresent()) {
+            Optional<UfModel> nomeEncontrado = this.ufService.buscarPorNome(nome.get());
+
+            if (nomeEncontrado.isEmpty()) {
+                return ResponseEntity.ok().body(Collections.emptyList());
+            }
+
+            return ResponseEntity.ok().body(new ListaUfDTO(nomeEncontrado.get()));
+        }
+
+
+
+        List<UfModel> listarUfPorParametros = this.ufService.listarTodasUfsPorParametros(codigoUf, sigla, nome, status);
+
+        List<ListaUfDTO> listaUfs = listarUfPorParametros.stream().map(ListaUfDTO::new).toList();
+
+        return ResponseEntity.ok().body(listaUfs.isEmpty() ? new ArrayList<>() : listaUfs);
+    }
 
     @PostMapping
     @Transactional
     public ResponseEntity<List<ListaUfDTO>> cadastrarUf(@RequestBody @Valid UfDTO dadosUf) {
 
         var cadastrarUf = this.ufService.cadastrarUf(dadosUf).stream().map(ListaUfDTO::new).toList();
-        
+
         return ResponseEntity.status(200).body(cadastrarUf);
     }
 

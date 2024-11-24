@@ -1,6 +1,5 @@
 package br.com.squadra.bootcamp.java.springboot.api.pessoa;
 
-import br.com.squadra.bootcamp.java.springboot.api.bairro.BairroModel;
 import br.com.squadra.bootcamp.java.springboot.api.infra.exception.ValidacaoException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -9,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/pessoa")
@@ -54,8 +52,6 @@ public class PessoaController {
 
         List<ListaPessoaDTO> listaPessoas = listarPessoasPorParametros.stream().map(ListaPessoaDTO::new).toList();
 
-        //var pessoas = this.pessoaService.listarPessoas().stream().map(ListaPessoaDTO::new).toList();
-
         return ResponseEntity.ok().body(listaPessoas.isEmpty() ? new ArrayList<>() : listaPessoas);
     }
 
@@ -66,6 +62,15 @@ public class PessoaController {
         var cadastrarPessoa = this.pessoaService.cadastrarPessoa(dadosPessoa).stream().map(ListaPessoaDTO::new).toList();
 
         return ResponseEntity.ok().body(cadastrarPessoa);
+    }
+
+    @PutMapping
+    @Transactional
+    public ResponseEntity atualizarPessoa(@RequestBody @Valid AtualizacaoPessoaDTO dadosPessoa) {
+
+        var atualizarPessoa = this.pessoaService.atualizarPessoa(dadosPessoa).stream().map(ListaPessoaDTO::new).toList();
+
+        return ResponseEntity.ok().body(atualizarPessoa);
     }
 
     @DeleteMapping

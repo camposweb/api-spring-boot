@@ -42,7 +42,16 @@ public class EnderecoModel {
     @Column(name = "CEP", nullable = false, length = 10)
     private String cep;
 
-    public EnderecoModel(PessoaModel pessoa,EnderecoDTO dadosEndereco) {
+    public EnderecoModel(PessoaModel pessoa, EnderecoDTO dadosEndereco) {
+        this.codigoPessoa = pessoa;
+        this.codigoBairro = new BairroModel(dadosEndereco.codigoBairro());
+        this.nomeRua = dadosEndereco.nomeRua();
+        this.numero = dadosEndereco.numero();
+        this.complemento = dadosEndereco.complemento();
+        this.cep = dadosEndereco.cep();
+    }
+
+    public EnderecoModel(PessoaModel pessoa, AtualizacaoEnderecoDTO dadosEndereco) {
         this.codigoPessoa = pessoa;
         this.codigoBairro = new BairroModel(dadosEndereco.codigoBairro());
         this.nomeRua = dadosEndereco.nomeRua();

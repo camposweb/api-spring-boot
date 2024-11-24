@@ -13,5 +13,8 @@ public interface IPessoaRepository extends JpaRepository<PessoaModel, Long>, Jpa
 
     Boolean existsByLogin(String login);
 
+    Boolean existsByLoginAndCodigoPessoaNot(String login, Long codigoPessoa);
+
     Optional<PessoaModel> findByCodigoPessoa(Long codigoPessoa);
+
 }

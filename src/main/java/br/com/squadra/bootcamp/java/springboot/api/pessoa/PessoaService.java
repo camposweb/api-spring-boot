@@ -90,6 +90,38 @@ public class PessoaService {
         return this.pessoaRepository.findAll();
     }
 
+
+    public List<PessoaModel> atualizarPessoa(AtualizacaoPessoaDTO dadosPessoa) {
+
+        var existeCodigoPessoa = this.pessoaRepository.existsByCodigoPessoa(dadosPessoa.codigoPessoa());
+        if (!existeCodigoPessoa) {
+            throw new ValidacaoException("A pessoa com o código " + dadosPessoa.codigoPessoa() + " não existe", 404);
+        }
+
+        var atualizarPessoa = this.pessoaRepository.getReferenceById(dadosPessoa.codigoPessoa());
+
+        var existeCodigoPessoaComLogin = this.pessoaRepository.existsByLoginAndCodigoPessoaNot(dadosPessoa.login(), dadosPessoa.codigoPessoa());
+        if (existeCodigoPessoaComLogin) {
+            throw new ValidacaoException("O login " + dadosPessoa.login() + " já existe", 404);
+        }
+
+        dadosPessoa.enderecos().forEach(endereco -> {
+            var existeCodigoBairro = this.bairroRepository.existsByCodigoBairro(endereco.codigoBairro());
+            if (!existeCodigoBairro) {
+                throw new ValidacaoException("O Bairro com o código " + endereco.codigoBairro() + " não existe", 404);
+            }
+
+
+        });
+
+
+        atualizarPessoa.atualizarInformacoes(dadosPessoa);
+        this.pessoaRepository.save(atualizarPessoa);
+
+
+        return this.pessoaRepository.findAll();
+    }
+
     public List<PessoaModel> deletarPessoa(DeletarPessoaDTO dadosPessoa) {
 
         var existePessoa = this.pessoaRepository.existsByCodigoPessoa(dadosPessoa.codigoPessoa());

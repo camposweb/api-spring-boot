@@ -17,6 +17,8 @@ public record ListaPessoaDTO(
 
         String login,
 
+        String senha,
+
         Integer status,
 
         List<EnderecoDTO> enderecos
@@ -30,6 +32,7 @@ public record ListaPessoaDTO(
                 pessoaModel.getSobrenome(),
                 pessoaModel.getIdade(),
                 pessoaModel.getLogin(),
+                pessoaModel.getSenha(),
                 pessoaModel.getStatus(),
                 Collections.emptyList()
         );

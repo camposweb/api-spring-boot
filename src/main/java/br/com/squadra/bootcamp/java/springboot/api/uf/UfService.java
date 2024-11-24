@@ -1,7 +1,6 @@
 package br.com.squadra.bootcamp.java.springboot.api.uf;
 
 import br.com.squadra.bootcamp.java.springboot.api.infra.exception.ValidacaoException;
-import br.com.squadra.bootcamp.java.springboot.api.uf.validacoes.cadastro.ValidadorCadastroUf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -15,13 +14,6 @@ public class UfService {
 
     @Autowired
     private IUfRepository ufRepository;
-
-    @Autowired
-    private List<ValidadorCadastroUf> validadores;
-
-    public List<UfModel> listarTodasUfs() {
-        return this.ufRepository.findAll();
-    }
 
 
     public  Optional<UfModel> buscarPorCodigoUf(Long codigoBairro) {

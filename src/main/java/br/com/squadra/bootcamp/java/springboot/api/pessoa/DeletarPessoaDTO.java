@@ -2,7 +2,6 @@ package br.com.squadra.bootcamp.java.springboot.api.pessoa;
 
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import org.hibernate.validator.constraints.Range;
 

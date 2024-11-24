@@ -34,26 +34,23 @@ public class BairroController {
 
         }
 
-
         if (nome.isPresent() && !nome.get().matches("^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$")) {
             throw new ValidacaoException("O parâmetro nome deve conter apenas letras", 404);
         }
-
 
         if (status.isPresent() && (status.get() < 1 || status.get() > 2)) {
             throw new ValidacaoException("O parâmetro status aceita somente o valor 1 - ATIVADO ou 2 - DESATIVADO", 404);
         }
 
-        // Caso o código do bairro seja informado
         if (codigoBairro.isPresent()) {
             Optional<BairroModel> bairroEncontrado = this.bairroService
-                    .buscarPorCodigoBairro(codigoBairro.get()); // Método no service para buscar pelo código
+                    .buscarPorCodigoBairro(codigoBairro.get());
 
             if (bairroEncontrado.isEmpty()) {
                 return ResponseEntity.ok(Collections.emptyList());
             }
 
-            return ResponseEntity.ok(new ListaBairroDTO(bairroEncontrado.get())); // Retorna apenas o objeto
+            return ResponseEntity.ok(new ListaBairroDTO(bairroEncontrado.get()));
         }
 
 

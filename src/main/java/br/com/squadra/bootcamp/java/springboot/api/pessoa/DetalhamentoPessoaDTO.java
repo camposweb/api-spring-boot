@@ -16,6 +16,8 @@ public record DetalhamentoPessoaDTO(
 
         String login,
 
+        String senha,
+
         Integer status,
 
         List<DetalhamentoEnderecoDTO> enderecos
@@ -28,6 +30,7 @@ public record DetalhamentoPessoaDTO(
                 pessoaModel.getSobrenome(),
                 pessoaModel.getIdade(),
                 pessoaModel.getLogin(),
+                pessoaModel.getSenha(),
                 pessoaModel.getStatus(),
                 pessoaModel.getEnderecos().stream().map(DetalhamentoEnderecoDTO::new).toList()
         );

@@ -95,15 +95,11 @@ public class UfService {
 			throw new ValidacaoException("Sigla " + dadosUf.sigla() + " já existe", 404);
 		}
 
-        var existeNomeUf = this.ufRepository.existsByNome(dadosUf.nome());
-
         var existeSiglaENome = this.ufRepository.existsBySiglaAndNome(dadosUf.sigla(), dadosUf.nome());
 
 		if (existeSiglaENome) {
 			throw new ValidacaoException("Nome do UF " + dadosUf.nome() + " já existe", 404);
 		}
-
-        //validadores.forEach(v -> v.validar(dadosUf));
 
         var cadastrarUf = new UfModel(dadosUf);
         this.ufRepository.save(cadastrarUf);
@@ -140,9 +136,6 @@ public class UfService {
         }
 
        this.ufRepository.deleteById(dadosUf.codigoUf());
-        //var inativarUf = this.ufRepository.getReferenceById(dadosUf.codigoUf());
-        //inativarUf.inativar();
-
 
         return this.ufRepository.findAll();
     }

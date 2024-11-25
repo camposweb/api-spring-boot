@@ -17,7 +17,7 @@ public class SpringDocConfiguration {
                         .description("API para o Bootcamp Java - Spring Boot | Projeto desenvolvido como desafio final do bootcamp java com spring boot da Squadra")
                         .version("1.0.0")
                         .contact(new Contact()
-                                .name("leandro Campos")
+                                .name("Leandro Campos")
                                 .email("camposweb@gmail.com")
                                 .url("https://github.com/camposweb")
                         )

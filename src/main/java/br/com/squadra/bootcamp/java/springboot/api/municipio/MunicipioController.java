@@ -19,7 +19,7 @@ public class MunicipioController {
 	private static final Set<String> PARAMETROS_VALIDOS = Set.of("codigoMunicipio", "codigoUf", "nome", "status");
 
 	@GetMapping
-	public ResponseEntity listarMunicipiosPorParametros(
+	public ResponseEntity listarMunicipios(
 			@RequestParam(required = false) Map<String, MunicipioModel> parametros,
 			@RequestParam(required = false) Optional<Long> codigoMunicipio,
 			@RequestParam(required = false) Optional<Long> codigoUf,
@@ -27,56 +27,37 @@ public class MunicipioController {
 			@RequestParam(required = false) Optional<Integer> status
 	) {
 
-		List<ListaMunicipioDTO> listarTodosMunicipios = this.municipioService.listarTodosMunicipios().stream().map(ListaMunicipioDTO::new).toList();
-
 		for (String parametro : parametros.keySet()) {
 			if (!PARAMETROS_VALIDOS.contains(parametro)) {
 				throw new ValidacaoException("Parâmetro " + parametro + " inválido -> Opções codigoMunicipio | codigoUf | nome | status inscritos exatamente como esá descrito ", 404);
 			}
 
-			if (codigoMunicipio.isPresent()) {
-                var resultado = this.municipioService.listarMunicipiosPorParametros(codigoMunicipio, codigoUf, nome, status).stream().map(ListaMunicipioDTO::new).findFirst();
-
-				var resultadoVazio = this.municipioService.listarMunicipiosPorParametros(codigoMunicipio, codigoUf, nome, status).stream().map(ListaMunicipioDTO::new).toList().isEmpty();
-
-				return ResponseEntity.ok().body(resultadoVazio ? new ArrayList<>() : resultado);
-			}
-
-			if (codigoUf.isPresent()) {
-
-				var resultado = this.municipioService.listarMunicipiosPorParametros(codigoMunicipio, codigoUf, nome, status).stream().map(ListaMunicipioDTO::new).toList();
-
-				var resultadoVazio = this.municipioService.listarMunicipiosPorParametros(codigoMunicipio, codigoUf, nome, status).stream().map(ListaMunicipioDTO::new).toList().isEmpty();
-
-				return ResponseEntity.ok().body(resultadoVazio ? new ArrayList<>() : resultado);
-			}
-
-			if (nome.isPresent()) {
-				var somenteTexto = nome.get().matches("^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$");
-				if (!somenteTexto) {
-					throw new ValidacaoException("O parâmetro nome deve conter apenas letras", 404);
-				}
-				var resultado = this.municipioService.listarMunicipiosPorParametros(codigoMunicipio, codigoUf, nome, status).stream().map(ListaMunicipioDTO::new).toList();
-
-				var resultadoVazio = this.municipioService.listarMunicipiosPorParametros(codigoMunicipio, codigoUf, nome, status).stream().map(ListaMunicipioDTO::new).toList().isEmpty();
-
-				return ResponseEntity.ok().body(resultadoVazio ? new ArrayList<>() : resultado);
-			}
-
-			if (status.isPresent()) {
-				if (status.get() < 1 || status.get() > 2) {
-					throw new ValidacaoException("O parâmetro status aceita somente o valor 1 - ATIVADO ou 2 - DESATIVADO", 404);
-				}
-
-				var resultado = this.municipioService.listarMunicipiosPorParametros(codigoMunicipio, codigoUf, nome, status).stream().map(ListaMunicipioDTO::new).toList();
-
-				var resultadoVazio = this.municipioService.listarMunicipiosPorParametros(codigoMunicipio, codigoUf, nome, status).stream().map(ListaMunicipioDTO::new).toList().isEmpty();
-
-				return ResponseEntity.ok().body(resultadoVazio ? new ArrayList<>() : resultado);
-			}
 		}
 
-		return ResponseEntity.ok().body(listarTodosMunicipios);
+		if (nome.isPresent() && !nome.get().matches("^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$")) {
+			throw new ValidacaoException("O parâmetro nome deve conter apenas letras", 404);
+		}
+
+		if (status.isPresent() && (status.get() < 1 || status.get() > 2)) {
+			throw new ValidacaoException("O parâmetro status aceita somente o valor 1 - ATIVADO ou 2 - DESATIVADO", 404);
+		}
+
+		if (codigoMunicipio.isPresent()) {
+			Optional<MunicipioModel> municipioEncontrado = this.municipioService
+					.buscarPorCodigoMunicipio(codigoMunicipio.get());
+
+			if (municipioEncontrado.isEmpty()) {
+				return ResponseEntity.ok().body(Collections.emptyList());
+			}
+
+			return ResponseEntity.ok().body(new ListaMunicipioDTO(municipioEncontrado.get()));
+		}
+
+		List<MunicipioModel> listarMunicipiosPorParametros = this.municipioService.listarTodosMunicipiosPorParametros(codigoMunicipio, codigoUf, nome, status);
+
+		List<ListaMunicipioDTO> listaMunicipios = listarMunicipiosPorParametros.stream().map(ListaMunicipioDTO::new).toList();
+
+		return ResponseEntity.ok().body(listaMunicipios.isEmpty() ? new ArrayList<>() : listaMunicipios);
 	}
 
 	@PostMapping

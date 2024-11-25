@@ -3,8 +3,10 @@ package br.com.squadra.bootcamp.java.springboot.api.municipio;
 import br.com.squadra.bootcamp.java.springboot.api.infra.exception.ValidacaoException;
 import br.com.squadra.bootcamp.java.springboot.api.uf.IUfRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,30 +19,57 @@ public class MunicipioService {
     @Autowired
     private IUfRepository ufRepository;
 
-    public List<MunicipioModel> listarTodosMunicipios() {
-        return this.municipioRepository.findAll();
+
+    public Optional<MunicipioModel> buscarPorCodigoMunicipio(Long codigoMunicipio) {
+        return this.municipioRepository.findByCodigoMunicipio(codigoMunicipio);
     }
 
-    public List<MunicipioModel> listarMunicipiosPorParametros(
+    public List<MunicipioModel> listarTodosMunicipiosPorParametros(
             Optional<Long> codigoMunicipio,
             Optional<Long> codigoUf,
             Optional<String> nome,
             Optional<Integer> status
     ) {
 
+        Specification<MunicipioModel> listaMunicipioParametros = Specification.where(null);
+
         if (codigoMunicipio.isPresent()) {
-            return this.municipioRepository.findByCodigoMunicipio(codigoMunicipio.get());
-        } else if (codigoUf.isPresent()) {
-            return this.municipioRepository.findByCodigoUf_CodigoUf(codigoUf.get());
-        } else if (nome.isPresent()) {
-            return this.municipioRepository.findByNome(nome.get());
-        } else if (status.isPresent()) {
-            return this.municipioRepository.findByStatus(status.get());
-        } else {
-                return this.municipioRepository.findAll();
+            if (this.municipioRepository.count((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("codigoMunicipio"), codigoMunicipio.get())) == 0) {
+                return Collections.emptyList();
             }
+            listaMunicipioParametros = listaMunicipioParametros.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("codigoMunicipio"), codigoMunicipio.get()));
+        }
 
+        if (codigoUf.isPresent()) {
+            if (this.municipioRepository.count((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("codigoUf").get("codigoUf"), codigoUf.get())) == 0) {
+                return Collections.emptyList();
+            }
+            listaMunicipioParametros = listaMunicipioParametros.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("codigoUf").get("codigoUf"), codigoUf.get()));
+        }
 
+        if (nome.isPresent()) {
+            if (this.municipioRepository.count((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(criteriaBuilder.lower(root.get("nome")), nome.get().toLowerCase())) == 0) {
+                return Collections.emptyList();
+            }
+            listaMunicipioParametros = listaMunicipioParametros.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(criteriaBuilder.lower(root.get("nome")), nome.get().toLowerCase()));
+        }
+
+        if (status.isPresent()) {
+            if (this.municipioRepository.count((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("status"), status.get())) == 0) {
+                return Collections.emptyList();
+            }
+            listaMunicipioParametros = listaMunicipioParametros.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("status"), status.get()));
+        }
+
+        return this.municipioRepository.findAll(listaMunicipioParametros);
     }
 
     public List<MunicipioModel> cadastrarMunicipio(MunicipioDTO dadosMunicipio) {

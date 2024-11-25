@@ -1,12 +1,14 @@
 package br.com.squadra.bootcamp.java.springboot.api.municipio;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface IMunicipioRepository extends JpaRepository<MunicipioModel, Long> {
+public interface IMunicipioRepository extends JpaRepository<MunicipioModel, Long>, JpaSpecificationExecutor<MunicipioModel> {
 
     Boolean existsByCodigoMunicipio(Long  codigoMunicipio);
 
@@ -14,12 +16,6 @@ public interface IMunicipioRepository extends JpaRepository<MunicipioModel, Long
 
     Boolean existsByCodigoUf_CodigoUfAndNomeAndCodigoMunicipioNot(Long codigoUf, String nome, Long CodigoMunicipio);
 
-    List<MunicipioModel> findByCodigoMunicipio(Long codigoMunicipio);
-
-    List<MunicipioModel> findByCodigoUf_CodigoUf(Long codigoUf);
-
-    List<MunicipioModel> findByNome(String nome);
-
-    List<MunicipioModel> findByStatus(Integer status);
+    Optional<MunicipioModel> findByCodigoMunicipio(Long codigoMunicipio);
 
 }

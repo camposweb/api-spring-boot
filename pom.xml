@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.com.squadra.bootcamp.java</groupId>
 	<artifactId>api-spring-boot</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>api-spring-boot</name>
 	<description>Projeto do Bootcamp da Squadra - API JAVA com Spring Boot</description>
 	<url/>

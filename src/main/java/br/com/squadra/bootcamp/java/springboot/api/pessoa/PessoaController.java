@@ -1,6 +1,7 @@
 package br.com.squadra.bootcamp.java.springboot.api.pessoa;
 
 import br.com.squadra.bootcamp.java.springboot.api.infra.exception.ValidacaoException;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/pessoa")
+@Tag(name = "pessoa", description = "Operações relacionadas a Pessoas")
 public class PessoaController {
 
     @Autowired

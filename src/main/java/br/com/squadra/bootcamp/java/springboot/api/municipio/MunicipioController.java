@@ -1,6 +1,7 @@
 package br.com.squadra.bootcamp.java.springboot.api.municipio;
 
 import br.com.squadra.bootcamp.java.springboot.api.infra.exception.ValidacaoException;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/municipio")
+@Tag(name = "municipio", description = "Operações relacionadas a Municípios")
 public class MunicipioController {
 
 	@Autowired

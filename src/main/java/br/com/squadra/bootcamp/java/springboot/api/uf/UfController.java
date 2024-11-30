@@ -25,8 +25,8 @@ public class UfController {
     private static final Set<String> PARAMETROS_VALIDOS = Set.of("codigoUf", "sigla", "nome", "status");
 
     @GetMapping
-    public ResponseEntity listarUfs(
-            @RequestParam(required = false) Map<String, UfModel> parametros,
+    public ResponseEntity<List<ListaUfDTO>> listarUfs(
+            @RequestParam(required = false) Map<String, String> parametros,
             @RequestParam(required = false) Optional<Long> codigoUf,
             @RequestParam(required = false) Optional<String> sigla,
             @RequestParam(required = false) Optional<String> nome,
@@ -54,42 +54,33 @@ public class UfController {
         }
 
         if (codigoUf.isPresent()) {
-            Optional<UfModel> codigoUfEncontrado = this.ufService.buscarPorCodigoUf(codigoUf.get());
-
-            if (codigoUfEncontrado.isEmpty()) {
-                return ResponseEntity.ok().body(Collections.emptyList());
-            }
-
-            return ResponseEntity.ok().body(new ListaUfDTO(codigoUfEncontrado.get()));
+            Optional<UfModel> codigoUfEncontrado = ufService.buscarPorCodigoUf(codigoUf.get());
+            List<ListaUfDTO> resultado = codigoUfEncontrado
+                    .map(model -> List.of(new ListaUfDTO(model)))
+                    .orElseGet(ArrayList::new);
+            return ResponseEntity.ok(resultado);
         }
 
         if (sigla.isPresent()) {
-            Optional<UfModel> siglaEncontrada = this.ufService.buscarPorSigla(sigla.get());
-
-            if (siglaEncontrada.isEmpty()) {
-                return ResponseEntity.ok().body(Collections.emptyList());
-            }
-
-            return ResponseEntity.ok().body(new ListaUfDTO(siglaEncontrada.get()));
+            Optional<UfModel> siglaEncontrada = ufService.buscarPorSigla(sigla.get());
+            List<ListaUfDTO> resultado = siglaEncontrada
+                    .map(model -> List.of(new ListaUfDTO(model)))
+                    .orElseGet(ArrayList::new);
+            return ResponseEntity.ok().body(resultado);
         }
 
         if (nome.isPresent()) {
-            Optional<UfModel> nomeEncontrado = this.ufService.buscarPorNome(nome.get());
-
-            if (nomeEncontrado.isEmpty()) {
-                return ResponseEntity.ok().body(Collections.emptyList());
-            }
-
-            return ResponseEntity.ok().body(new ListaUfDTO(nomeEncontrado.get()));
+            Optional<UfModel> nomeEncontrado = ufService.buscarPorNome(nome.get());
+            List<ListaUfDTO> resultado = nomeEncontrado
+                    .map(model -> List.of(new ListaUfDTO(model)))
+                    .orElseGet(ArrayList::new);
+            return ResponseEntity.ok().body(resultado);
         }
 
-
-
-        List<UfModel> listarUfPorParametros = this.ufService.listarTodasUfsPorParametros(codigoUf, sigla, nome, status);
-
+        List<UfModel> listarUfPorParametros = ufService.listarTodasUfsPorParametros(codigoUf, sigla, nome, status);
         List<ListaUfDTO> listaUfs = listarUfPorParametros.stream().map(ListaUfDTO::new).toList();
 
-        return ResponseEntity.ok().body(listaUfs.isEmpty() ? new ArrayList<>() : listaUfs);
+        return ResponseEntity.ok().body(listaUfs);
     }
 
     @PostMapping

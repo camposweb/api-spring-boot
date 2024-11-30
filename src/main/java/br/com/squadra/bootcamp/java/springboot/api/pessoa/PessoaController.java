@@ -21,8 +21,8 @@ public class PessoaController {
     private static final Set<String> PARAMETROS_VALIDOS = Set.of("codigoPessoa", "login", "status");
 
     @GetMapping
-    public ResponseEntity listarPessoas(
-            @RequestParam(required = false) Map<String, PessoaModel> parametros,
+    public ResponseEntity<List<ListaPessoaDTO>> listarPessoas(
+            @RequestParam(required = false) Map<String, String> parametros,
             @RequestParam(required = false) Optional<Long> codigoPessoa,
             @RequestParam(required = false) Optional<String> login,
             @RequestParam(required = false) Optional<Integer> status
@@ -43,23 +43,22 @@ public class PessoaController {
             Optional<PessoaModel> pessoaEncontrada = this.pessoaService
                     .buscarPorCodigoPessoa(codigoPessoa.get());
 
-            if (pessoaEncontrada.isEmpty()) {
-                return ResponseEntity.ok().body(Collections.emptyList());
-            }
-
-            return ResponseEntity.ok().body(new DetalhamentoPessoaDTO(pessoaEncontrada.get()));
+            List<ListaPessoaDTO> resultado = pessoaEncontrada
+                    .map(model -> List.of(new ListaPessoaDTO(model)))
+                    .orElseGet(ArrayList::new);
+            return ResponseEntity.ok().body(resultado);
         }
 
         List<PessoaModel> listarPessoasPorParametros = this.pessoaService.buscarPessoasComParametrosOpcionais(codigoPessoa, login, status);
 
         List<ListaPessoaDTO> listaPessoas = listarPessoasPorParametros.stream().map(ListaPessoaDTO::new).toList();
 
-        return ResponseEntity.ok().body(listaPessoas.isEmpty() ? new ArrayList<>() : listaPessoas);
+        return ResponseEntity.ok().body(listaPessoas);
     }
 
     @PostMapping
     @Transactional
-    public ResponseEntity cadastrarPessoa(@RequestBody @Valid PessoaDTO dadosPessoa) {
+    public ResponseEntity<List<ListaPessoaDTO>> cadastrarPessoa(@RequestBody @Valid PessoaDTO dadosPessoa) {
 
         var cadastrarPessoa = this.pessoaService.cadastrarPessoa(dadosPessoa).stream().map(ListaPessoaDTO::new).toList();
 
@@ -68,7 +67,7 @@ public class PessoaController {
 
     @PutMapping
     @Transactional
-    public ResponseEntity atualizarPessoa(@RequestBody @Valid AtualizacaoPessoaDTO dadosPessoa) {
+    public ResponseEntity<List<ListaPessoaDTO>> atualizarPessoa(@RequestBody @Valid AtualizacaoPessoaDTO dadosPessoa) {
 
         var atualizarPessoa = this.pessoaService.atualizarPessoa(dadosPessoa).stream().map(ListaPessoaDTO::new).toList();
 
@@ -77,7 +76,7 @@ public class PessoaController {
 
     @DeleteMapping
     @Transactional
-    public ResponseEntity deletarPessoa(@RequestBody @Valid DeletarPessoaDTO dadosPessoa) {
+    public ResponseEntity<List<ListaPessoaDTO>> deletarPessoa(@RequestBody @Valid DeletarPessoaDTO dadosPessoa) {
 
         var deletarPessoa = this.pessoaService.deletarPessoa(dadosPessoa).stream().map(ListaPessoaDTO::new).toList();
         return ResponseEntity.ok().body(deletarPessoa);

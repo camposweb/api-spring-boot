@@ -21,8 +21,8 @@ public class MunicipioController {
 	private static final Set<String> PARAMETROS_VALIDOS = Set.of("codigoMunicipio", "codigoUf", "nome", "status");
 
 	@GetMapping
-	public ResponseEntity listarMunicipios(
-			@RequestParam(required = false) Map<String, MunicipioModel> parametros,
+	public ResponseEntity<List<ListaMunicipioDTO>> listarMunicipios(
+			@RequestParam(required = false) Map<String, String> parametros,
 			@RequestParam(required = false) Optional<Long> codigoMunicipio,
 			@RequestParam(required = false) Optional<Long> codigoUf,
 			@RequestParam(required = false) Optional<String> nome,
@@ -45,26 +45,23 @@ public class MunicipioController {
 		}
 
 		if (codigoMunicipio.isPresent()) {
-			Optional<MunicipioModel> municipioEncontrado = this.municipioService
-					.buscarPorCodigoMunicipio(codigoMunicipio.get());
-
-			if (municipioEncontrado.isEmpty()) {
-				return ResponseEntity.ok().body(Collections.emptyList());
-			}
-
-			return ResponseEntity.ok().body(new ListaMunicipioDTO(municipioEncontrado.get()));
+			Optional<MunicipioModel> municipioEncontrado = municipioService.buscarPorCodigoMunicipio(codigoMunicipio.get());
+			List<ListaMunicipioDTO> resultado = municipioEncontrado
+					.map(model -> List.of(new ListaMunicipioDTO(model)))
+					.orElseGet(ArrayList::new);
+			return ResponseEntity.ok().body(resultado);
 		}
 
 		List<MunicipioModel> listarMunicipiosPorParametros = this.municipioService.listarTodosMunicipiosPorParametros(codigoMunicipio, codigoUf, nome, status);
 
 		List<ListaMunicipioDTO> listaMunicipios = listarMunicipiosPorParametros.stream().map(ListaMunicipioDTO::new).toList();
 
-		return ResponseEntity.ok().body(listaMunicipios.isEmpty() ? new ArrayList<>() : listaMunicipios);
+		return ResponseEntity.ok().body(listaMunicipios);
 	}
 
 	@PostMapping
 	@Transactional
-	public ResponseEntity cadastrarMunicipio(@RequestBody @Valid MunicipioDTO dadosMunicipio) {
+	public ResponseEntity<List<ListaMunicipioDTO>> cadastrarMunicipio(@RequestBody @Valid MunicipioDTO dadosMunicipio) {
 
 		var cadastrarMunicipio = this.municipioService.cadastrarMunicipio(dadosMunicipio).stream().map(ListaMunicipioDTO::new).toList();
 
@@ -73,7 +70,7 @@ public class MunicipioController {
 
 	@PutMapping
 	@Transactional
-	public ResponseEntity atualizarMunicipio(@RequestBody @Valid AtualizacaoMunicipioDTO dadosMunicipio) {
+	public ResponseEntity<List<ListaMunicipioDTO>> atualizarMunicipio(@RequestBody @Valid AtualizacaoMunicipioDTO dadosMunicipio) {
 
 		var atualizarMunicipio = this.municipioService.atualizarMunicipio(dadosMunicipio).stream().map(ListaMunicipioDTO::new).toList();
 
@@ -82,7 +79,7 @@ public class MunicipioController {
 
 	@DeleteMapping
 	@Transactional
-	public ResponseEntity deletarMunicipio(@RequestBody @Valid DeletarMunicipioDTO dadosMunicipio) {
+	public ResponseEntity<List<ListaMunicipioDTO>> deletarMunicipio(@RequestBody @Valid DeletarMunicipioDTO dadosMunicipio) {
 
 		var deletarMunicipio = this.municipioService.deletarMunicipio(dadosMunicipio).stream().map(ListaMunicipioDTO::new).toList();
 

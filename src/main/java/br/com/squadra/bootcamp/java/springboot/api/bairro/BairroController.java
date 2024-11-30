@@ -21,8 +21,8 @@ public class BairroController {
     private static final Set<String> PARAMETROS_VALIDOS = Set.of("codigoBairro", "codigoMunicipio", "nome", "status");
 
     @GetMapping
-    public ResponseEntity listarBairros(
-            @RequestParam(required = false) Map<String, BairroModel> parametros,
+    public ResponseEntity<List<ListaBairroDTO>> listarBairros(
+            @RequestParam(required = false) Map<String, String> parametros,
             @RequestParam(required = false) Optional<Long> codigoBairro,
             @RequestParam(required = false) Optional<Long> codigoMunicipio,
             @RequestParam(required = false) Optional<String> nome,
@@ -48,11 +48,10 @@ public class BairroController {
             Optional<BairroModel> bairroEncontrado = this.bairroService
                     .buscarPorCodigoBairro(codigoBairro.get());
 
-            if (bairroEncontrado.isEmpty()) {
-                return ResponseEntity.ok(Collections.emptyList());
-            }
-
-            return ResponseEntity.ok(new ListaBairroDTO(bairroEncontrado.get()));
+            List<ListaBairroDTO> resultado = bairroEncontrado
+                    .map(model -> List.of(new ListaBairroDTO(model)))
+                    .orElseGet(ArrayList::new);
+            return ResponseEntity.ok().body(resultado);
         }
 
 
@@ -60,12 +59,12 @@ public class BairroController {
 
         List<ListaBairroDTO> listaBairros = listaBairroPorParametros.stream().map(ListaBairroDTO::new).toList();
 
-        return ResponseEntity.ok().body(listaBairros.isEmpty() ? new ArrayList<>() : listaBairros);
+        return ResponseEntity.ok().body(listaBairros);
     }
 
     @PostMapping
     @Transactional
-    public ResponseEntity cadastrarBairro(@RequestBody @Valid BairroDTO dadosBairro) {
+    public ResponseEntity<List<ListaBairroDTO>> cadastrarBairro(@RequestBody @Valid BairroDTO dadosBairro) {
 
         var cadastrarBairro = this.bairroService.cadastrarBairro(dadosBairro).stream().map(ListaBairroDTO::new).toList();
 
@@ -74,7 +73,7 @@ public class BairroController {
 
     @PutMapping
     @Transactional
-    public ResponseEntity atualizarBairro(@RequestBody @Valid AtualizacaoBairroDTO dadosBairro) {
+    public ResponseEntity<List<ListaBairroDTO>> atualizarBairro(@RequestBody @Valid AtualizacaoBairroDTO dadosBairro) {
 
         var atualizarBairro = this.bairroService.atualizarBairro(dadosBairro).stream().map(ListaBairroDTO::new).toList();
 
@@ -83,7 +82,7 @@ public class BairroController {
 
     @DeleteMapping
     @Transactional
-    public ResponseEntity deletarBairro(@RequestBody @Valid DeletarBairroDTO dadosBairro) {
+    public ResponseEntity<List<ListaBairroDTO>> deletarBairro(@RequestBody @Valid DeletarBairroDTO dadosBairro) {
 
         var deletarBairro = this.bairroService.deletarBairro(dadosBairro).stream().map(ListaBairroDTO::new).toList();
 

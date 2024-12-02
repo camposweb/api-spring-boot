@@ -23,6 +23,7 @@ public record PessoaDTO(
         @NotNull
         @Min(value = 1, message = "Idade deve ser mínimo 1 ano")
         @Max(value = 150, message = "Idade deve ser máximo 150 anos")
+        @Positive(message = "O status deve ser maior que 0.")
         Integer idade,
 
         @NotBlank
@@ -35,6 +36,8 @@ public record PessoaDTO(
 
         @NotNull
         @Range(min = 1, max = 2, message = "Deve conter 1 para ativo ou 2 para desativado")
+        @Digits(integer = 1, fraction = 0, message = "Aceito somente 1 (ATIVO) ou 2(DESATIVADO)")
+        @Positive(message = "O status deve ser maior que 0.")
         Integer status,
 
         @NotEmpty(message = "Deve conter ao menos um endereço")

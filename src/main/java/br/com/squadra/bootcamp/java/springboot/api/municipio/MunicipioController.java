@@ -21,7 +21,7 @@ public class MunicipioController {
 	private static final Set<String> PARAMETROS_VALIDOS = Set.of("codigoMunicipio", "codigoUf", "nome", "status");
 
 	@GetMapping
-	public ResponseEntity<List<ListaMunicipioDTO>> listarMunicipios(
+	public ResponseEntity<?> listarMunicipios(
 			@RequestParam(required = false) Map<String, String> parametros,
 			@RequestParam(required = false) Optional<Long> codigoMunicipio,
 			@RequestParam(required = false) Optional<Long> codigoUf,
@@ -45,18 +45,21 @@ public class MunicipioController {
 		}
 
 		if (codigoMunicipio.isPresent()) {
-			Optional<MunicipioModel> municipioEncontrado = municipioService.buscarPorCodigoMunicipio(codigoMunicipio.get());
-			List<ListaMunicipioDTO> resultado = municipioEncontrado
-					.map(model -> List.of(new ListaMunicipioDTO(model)))
-					.orElseGet(ArrayList::new);
-			return ResponseEntity.ok().body(resultado);
+			Optional<MunicipioModel> municipioEncontrado = this.municipioService
+					.buscarPorCodigoMunicipio(codigoMunicipio.get());
+
+			if (municipioEncontrado.isEmpty()) {
+				return ResponseEntity.ok().body(new ArrayList<>());
+			}
+
+			return ResponseEntity.ok().body(new ListaMunicipioDTO(municipioEncontrado.get()));
 		}
 
 		List<MunicipioModel> listarMunicipiosPorParametros = this.municipioService.listarTodosMunicipiosPorParametros(codigoMunicipio, codigoUf, nome, status);
 
 		List<ListaMunicipioDTO> listaMunicipios = listarMunicipiosPorParametros.stream().map(ListaMunicipioDTO::new).toList();
 
-		return ResponseEntity.ok().body(listaMunicipios);
+		return ResponseEntity.ok().body(listaMunicipios.isEmpty() ? new ArrayList<>() : listaMunicipios);
 	}
 
 	@PostMapping

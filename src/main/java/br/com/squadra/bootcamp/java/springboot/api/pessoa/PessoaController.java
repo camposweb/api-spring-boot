@@ -21,7 +21,7 @@ public class PessoaController {
     private static final Set<String> PARAMETROS_VALIDOS = Set.of("codigoPessoa", "login", "status");
 
     @GetMapping
-    public ResponseEntity<List<ListaPessoaDTO>> listarPessoas(
+    public ResponseEntity<?> listarPessoas(
             @RequestParam(required = false) Map<String, String> parametros,
             @RequestParam(required = false) Optional<Long> codigoPessoa,
             @RequestParam(required = false) Optional<String> login,
@@ -43,17 +43,18 @@ public class PessoaController {
             Optional<PessoaModel> pessoaEncontrada = this.pessoaService
                     .buscarPorCodigoPessoa(codigoPessoa.get());
 
-            List<ListaPessoaDTO> resultado = pessoaEncontrada
-                    .map(model -> List.of(new ListaPessoaDTO(model)))
-                    .orElseGet(ArrayList::new);
-            return ResponseEntity.ok().body(resultado);
+            if (pessoaEncontrada.isEmpty()) {
+                return ResponseEntity.ok().body(Collections.emptyList());
+            }
+
+            return ResponseEntity.ok().body(new DetalhamentoPessoaDTO(pessoaEncontrada.get()));
         }
 
         List<PessoaModel> listarPessoasPorParametros = this.pessoaService.buscarPessoasComParametrosOpcionais(codigoPessoa, login, status);
 
         List<ListaPessoaDTO> listaPessoas = listarPessoasPorParametros.stream().map(ListaPessoaDTO::new).toList();
 
-        return ResponseEntity.ok().body(listaPessoas);
+        return ResponseEntity.ok().body(listaPessoas.isEmpty() ? new ArrayList<>() : listaPessoas);
     }
 
     @PostMapping

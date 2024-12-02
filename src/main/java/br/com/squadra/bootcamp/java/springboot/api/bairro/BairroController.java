@@ -21,7 +21,7 @@ public class BairroController {
     private static final Set<String> PARAMETROS_VALIDOS = Set.of("codigoBairro", "codigoMunicipio", "nome", "status");
 
     @GetMapping
-    public ResponseEntity<List<ListaBairroDTO>> listarBairros(
+    public ResponseEntity<?> listarBairros(
             @RequestParam(required = false) Map<String, String> parametros,
             @RequestParam(required = false) Optional<Long> codigoBairro,
             @RequestParam(required = false) Optional<Long> codigoMunicipio,
@@ -48,10 +48,11 @@ public class BairroController {
             Optional<BairroModel> bairroEncontrado = this.bairroService
                     .buscarPorCodigoBairro(codigoBairro.get());
 
-            List<ListaBairroDTO> resultado = bairroEncontrado
-                    .map(model -> List.of(new ListaBairroDTO(model)))
-                    .orElseGet(ArrayList::new);
-            return ResponseEntity.ok().body(resultado);
+            if (bairroEncontrado.isEmpty()) {
+                return ResponseEntity.ok(new ArrayList<>());
+            }
+
+            return ResponseEntity.ok().body(new ListaBairroDTO(bairroEncontrado.get()));
         }
 
 
@@ -59,7 +60,7 @@ public class BairroController {
 
         List<ListaBairroDTO> listaBairros = listaBairroPorParametros.stream().map(ListaBairroDTO::new).toList();
 
-        return ResponseEntity.ok().body(listaBairros);
+        return ResponseEntity.ok().body(listaBairros.isEmpty() ? new ArrayList<>() : listaBairros);
     }
 
     @PostMapping

@@ -12,19 +12,19 @@ public record AtualizacaoEnderecoDTO(
 
         @Range(min = 1, message = "Deve conter o codigoEndereco referente")
         @Digits(integer = 9, fraction = 0, message = "O valor deve ter no máximo 9 dígitos")
-        @Positive(message = "O código deve ser maior que 0")
+        @Positive(message = "O código do endereço deve ser maior que 0")
         Long codigoEndereco,
 
         @NotNull
         @Range(min = 1, message = "Deve conter o codigoPessoa referente")
         @Digits(integer = 9, fraction = 0, message = "O valor deve ter no máximo 9 dígitos")
-        @Positive(message = "O código deve ser maior que 0")
+        @Positive(message = "O código da pessoa deve ser maior que 0")
         Long codigoPessoa,
 
         @NotNull
         @Range(min = 1, message = "Deve conter o codigoBairro referente")
         @Digits(integer = 9, fraction = 0, message = "O valor deve ter no máximo 9 dígitos")
-        @Positive(message = "O código deve ser maior que 0")
+        @Positive(message = "O código do bairro deve ser maior que 0")
         Long codigoBairro,
 
         @NotBlank

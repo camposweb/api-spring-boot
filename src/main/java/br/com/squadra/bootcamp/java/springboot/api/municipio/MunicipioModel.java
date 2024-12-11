@@ -1,6 +1,5 @@
 package br.com.squadra.bootcamp.java.springboot.api.municipio;
 
-import br.com.squadra.bootcamp.java.springboot.api.uf.UFDTO;
 import br.com.squadra.bootcamp.java.springboot.api.uf.UFModel;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

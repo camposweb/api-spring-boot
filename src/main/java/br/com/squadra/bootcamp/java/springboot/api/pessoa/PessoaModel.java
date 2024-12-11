@@ -86,17 +86,25 @@ public class PessoaModel {
 
 
         if (dadosAtualizacao.enderecos() != null) {
+            // Separar endereços com codigoEndereco=null
+            List<AtualizacaoEnderecoDTO> enderecosSemCodigo = dadosAtualizacao.enderecos().stream()
+                    .filter(endereco -> endereco.codigoEndereco() == null)
+                    .toList();
 
-            Map<Long, AtualizacaoEnderecoDTO> enderecosAtualizadosMap = dadosAtualizacao.enderecos().stream()
-                    .collect(Collectors.toMap(AtualizacaoEnderecoDTO::codigoEndereco, enderecoDTO -> enderecoDTO));
+            // Agrupar endereços por codigoEndereco, ignorando os que têm codigoEndereco=null
+            Map<Long, List<AtualizacaoEnderecoDTO>> enderecosAgrupados = dadosAtualizacao.enderecos().stream()
+                    .filter(endereco -> endereco.codigoEndereco() != null)
+                    .collect(Collectors.groupingBy(AtualizacaoEnderecoDTO::codigoEndereco));
 
 
             Iterator<EnderecoModel> enderecoIterator = this.enderecos.iterator();
             while (enderecoIterator.hasNext()) {
                 EnderecoModel enderecoAtual = enderecoIterator.next();
-                AtualizacaoEnderecoDTO enderecoDTO = enderecosAtualizadosMap.get(enderecoAtual.getCodigoEndereco());
 
-                if (enderecoDTO != null) {
+
+                List<AtualizacaoEnderecoDTO> enderecosDTOs = enderecosAgrupados.get(enderecoAtual.getCodigoEndereco());
+                if (enderecosDTOs != null && !enderecosDTOs.isEmpty()) {
+                    AtualizacaoEnderecoDTO enderecoDTO = enderecosDTOs.get(0);
 
                     if (!enderecoDTO.codigoPessoa().equals(this.codigoPessoa)) {
                         throw new IllegalArgumentException("O endereço não pertence a esta pessoa.");
@@ -109,17 +117,17 @@ public class PessoaModel {
                     enderecoAtual.setCep(enderecoDTO.cep());
 
 
-                    enderecosAtualizadosMap.remove(enderecoAtual.getCodigoEndereco());
-
+                    enderecosDTOs.remove(enderecoDTO);
+                    if (enderecosDTOs.isEmpty()) {
+                        enderecosAgrupados.remove(enderecoAtual.getCodigoEndereco());
+                    }
                 } else {
-
                     enderecoIterator.remove();
-
                 }
             }
 
-
-            for (AtualizacaoEnderecoDTO novoEnderecoDTO : enderecosAtualizadosMap.values()) {
+            // Adicionar novos endereços com codigoEndereco=null
+            for (AtualizacaoEnderecoDTO novoEnderecoDTO : enderecosSemCodigo) {
                 if (!novoEnderecoDTO.codigoPessoa().equals(this.codigoPessoa)) {
                     throw new IllegalArgumentException("O endereço não pertence a esta pessoa.");
                 }
@@ -130,7 +138,24 @@ public class PessoaModel {
                 );
                 this.enderecos.add(novoEndereco);
             }
+
+            // Adicionar novos endereços com codigoEndereco não nulo
+            for (List<AtualizacaoEnderecoDTO> enderecosDTOs : enderecosAgrupados.values()) {
+                for (AtualizacaoEnderecoDTO novoEnderecoDTO : enderecosDTOs) {
+                    if (!novoEnderecoDTO.codigoPessoa().equals(this.codigoPessoa)) {
+                        throw new IllegalArgumentException("O endereço não pertence a esta pessoa.");
+                    }
+
+                    EnderecoModel novoEndereco = new EnderecoModel(
+                            this,
+                            novoEnderecoDTO
+                    );
+                    this.enderecos.add(novoEndereco);
+                }
+            }
         }
+
+
     }
 
 

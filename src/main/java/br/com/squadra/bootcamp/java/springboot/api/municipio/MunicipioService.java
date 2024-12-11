@@ -26,7 +26,7 @@ public class MunicipioService {
 
     public List<MunicipioModel> listarTodosMunicipiosPorParametros(
             Optional<Long> codigoMunicipio,
-            Optional<Long> codigoUf,
+            Optional<Long> codigoUF,
             Optional<String> nome,
             Optional<Integer> status
     ) {
@@ -42,13 +42,13 @@ public class MunicipioService {
                     criteriaBuilder.equal(root.get("codigoMunicipio"), codigoMunicipio.get()));
         }
 
-        if (codigoUf.isPresent()) {
+        if (codigoUF.isPresent()) {
             if (this.municipioRepository.count((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("codigoUf").get("codigoUf"), codigoUf.get())) == 0) {
+                    criteriaBuilder.equal(root.get("codigoUF").get("codigoUF"), codigoUF.get())) == 0) {
                 return Collections.emptyList();
             }
             listaMunicipioParametros = listaMunicipioParametros.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("codigoUf").get("codigoUf"), codigoUf.get()));
+                    criteriaBuilder.equal(root.get("codigoUF").get("codigoUF"), codigoUF.get()));
         }
 
         if (nome.isPresent()) {
@@ -74,14 +74,14 @@ public class MunicipioService {
 
     public List<MunicipioModel> cadastrarMunicipio(MunicipioDTO dadosMunicipio) {
 
-        var existeCodigoUfTBUF = this.ufRepository.existsByCodigoUf(dadosMunicipio.codigoUf());
-        if (!existeCodigoUfTBUF) {
-            throw new ValidacaoException("codigoUf " + dadosMunicipio.codigoUf() + " informado não existe", 404);
+        var existeCodigoUFTBUF = this.ufRepository.existsByCodigoUF(dadosMunicipio.codigoUF());
+        if (!existeCodigoUFTBUF) {
+            throw new ValidacaoException("codigoUF " + dadosMunicipio.codigoUF() + " informado não existe", 404);
         }
 
-        var existeMunicipioComCodigoUf = this.municipioRepository.existsByCodigoUf_CodigoUfAndNome(dadosMunicipio.codigoUf(), dadosMunicipio.nome());
-        if (existeMunicipioComCodigoUf) {
-            throw new ValidacaoException("O Município " + dadosMunicipio.nome() + " com codigoUf " + dadosMunicipio.codigoUf() + " já existe", 404);
+        var existeMunicipioComCodigoUF = this.municipioRepository.existsByCodigoUF_CodigoUFAndNome(dadosMunicipio.codigoUF(), dadosMunicipio.nome());
+        if (existeMunicipioComCodigoUF) {
+            throw new ValidacaoException("O Município " + dadosMunicipio.nome() + " com codigoUF " + dadosMunicipio.codigoUF() + " já existe", 404);
         }
 
 
@@ -98,16 +98,16 @@ public class MunicipioService {
             throw new ValidacaoException("codigoMunicipio " + dadosMunicipio.codigoMunicipio() + " informado não existe", 404);
         }
 
-        var existeCodigoUf = this.ufRepository.existsByCodigoUf(dadosMunicipio.codigoUf());
-        if (!existeCodigoUf) {
-            throw new ValidacaoException("codigoUf " + dadosMunicipio.codigoUf() + " informado não existe", 404);
+        var existeCodigoUF = this.ufRepository.existsByCodigoUF(dadosMunicipio.codigoUF());
+        if (!existeCodigoUF) {
+            throw new ValidacaoException("codigoUF " + dadosMunicipio.codigoUF() + " informado não existe", 404);
         }
 
         var atualizarMunicipio = this.municipioRepository.getReferenceById(dadosMunicipio.codigoMunicipio());
 
-        var existeMunicipioComCodigoUf = this.municipioRepository.existsByCodigoUf_CodigoUfAndNomeAndCodigoMunicipioNot(dadosMunicipio.codigoUf(), dadosMunicipio.nome(), dadosMunicipio.codigoMunicipio());
-        if (existeMunicipioComCodigoUf) {
-            throw new ValidacaoException("O Município " + dadosMunicipio.nome() + " com codigoUf " + dadosMunicipio.codigoUf() + " já existe", 404);
+        var existeMunicipioComCodigoUF = this.municipioRepository.existsByCodigoUF_CodigoUFAndNomeAndCodigoMunicipioNot(dadosMunicipio.codigoUF(), dadosMunicipio.nome(), dadosMunicipio.codigoMunicipio());
+        if (existeMunicipioComCodigoUF) {
+            throw new ValidacaoException("O Município " + dadosMunicipio.nome() + " com codigoUF " + dadosMunicipio.codigoUF() + " já existe", 404);
         }
 
         atualizarMunicipio.atualizarInformacoes(dadosMunicipio);

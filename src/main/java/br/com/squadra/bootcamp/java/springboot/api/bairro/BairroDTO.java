@@ -14,13 +14,12 @@ public record BairroDTO(
 
         @NotBlank
         @Length(max = 256, message = "Deve conter no máximo 256 caracteres")
-        @Pattern(regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$", message = "Deve conter apenas letras")
         String nome,
 
         @NotNull
         @Range(min = 1, max = 2, message = "Deve conter 1 para ATIVADO ou 2 para DESATIVADO")
         @Digits(integer = 1, fraction = 0, message = "Aceita somente 1 (ATIVADO) ou 2(DESATIVADO)")
-	@Positive(message = "O status deve ser maior que 0.")
+	    @Positive(message = "O status deve ser maior que 0.")
         Integer status
 
 ) {

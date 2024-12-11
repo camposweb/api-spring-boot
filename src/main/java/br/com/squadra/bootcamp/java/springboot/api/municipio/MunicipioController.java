@@ -18,20 +18,20 @@ public class MunicipioController {
 	@Autowired
 	private MunicipioService municipioService;
 
-	private static final Set<String> PARAMETROS_VALIDOS = Set.of("codigoMunicipio", "codigoUf", "nome", "status");
+	private static final Set<String> PARAMETROS_VALIDOS = Set.of("codigoMunicipio", "codigoUF", "nome", "status");
 
 	@GetMapping
 	public ResponseEntity<?> listarMunicipios(
 			@RequestParam(required = false) Map<String, String> parametros,
 			@RequestParam(required = false) Optional<Long> codigoMunicipio,
-			@RequestParam(required = false) Optional<Long> codigoUf,
+			@RequestParam(required = false) Optional<Long> codigoUF,
 			@RequestParam(required = false) Optional<String> nome,
 			@RequestParam(required = false) Optional<Integer> status
 	) {
 
 		for (String parametro : parametros.keySet()) {
 			if (!PARAMETROS_VALIDOS.contains(parametro)) {
-				throw new ValidacaoException("Parâmetro " + parametro + " inválido -> Opções codigoMunicipio | codigoUf | nome | status inscritos exatamente como esá descrito ", 404);
+				throw new ValidacaoException("Parâmetro " + parametro + " inválido -> Opções codigoMunicipio | codigoUF | nome | status inscritos exatamente como esá descrito ", 404);
 			}
 
 		}
@@ -55,7 +55,7 @@ public class MunicipioController {
 			return ResponseEntity.ok().body(new ListaMunicipioDTO(municipioEncontrado.get()));
 		}
 
-		List<MunicipioModel> listarMunicipiosPorParametros = this.municipioService.listarTodosMunicipiosPorParametros(codigoMunicipio, codigoUf, nome, status);
+		List<MunicipioModel> listarMunicipiosPorParametros = this.municipioService.listarTodosMunicipiosPorParametros(codigoMunicipio, codigoUF, nome, status);
 
 		List<ListaMunicipioDTO> listaMunicipios = listarMunicipiosPorParametros.stream().map(ListaMunicipioDTO::new).toList();
 

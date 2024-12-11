@@ -9,22 +9,22 @@ import java.util.Optional;
 @Repository
 public interface IUfRepository extends JpaRepository<UfModel, Long>, JpaSpecificationExecutor<UfModel> {
 
-    Boolean existsByCodigoUf(Long codigoUf);
+    Boolean existsByCodigoUF(Long codigoUF);
 
     Boolean existsBySigla(String siglaUf);
 
     Boolean existsByNome(String nome);
     
-    Boolean existsBySiglaAndCodigoUfNot(String sigla, Long codigoUf);
+    Boolean existsBySiglaAndCodigoUFNot(String sigla, Long codigoUF);
 
     Boolean existsBySiglaAndNome(String sigla,String nome);
 
-    Optional<UfModel> findByCodigoUf(Long codigoUf);
+    Optional<UfModel> findByCodigoUF(Long codigoUF);
 
     Optional<UfModel> findBySigla(String siglaUf);
 
     Optional<UfModel> findByNome(String nome);
 
-    Optional<UfModel> findByCodigoUfAndSiglaAndNome(Long codigoUf, String sigla, String nome);
+    Optional<UfModel> findByCodigoUFAndSiglaAndNome(Long codigoUF, String sigla, String nome);
 
 }

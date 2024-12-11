@@ -22,12 +22,12 @@ public class UfController {
     @Autowired
     private IUfRepository ufRepository;
 
-    private static final Set<String> PARAMETROS_VALIDOS = Set.of("codigoUf", "sigla", "nome", "status");
+    private static final Set<String> PARAMETROS_VALIDOS = Set.of("codigoUF", "sigla", "nome", "status");
 
     @GetMapping
     public ResponseEntity<?> listarUfs(
             @RequestParam(required = false) Map<String, String> parametros,
-            @RequestParam(required = false) Optional<Long> codigoUf,
+            @RequestParam(required = false) Optional<Long> codigoUF,
             @RequestParam(required = false) Optional<String> sigla,
             @RequestParam(required = false) Optional<String> nome,
             @RequestParam(required = false) Optional<Integer> status
@@ -35,7 +35,7 @@ public class UfController {
 
         for (String parametro : parametros.keySet()) {
             if (!PARAMETROS_VALIDOS.contains(parametro)) {
-                throw new ValidacaoException("Parâmetro " + parametro + " inválido -> Opções codigoUf | sigla | nome | status inscritos exatamente como esá descrito ", 404);
+                throw new ValidacaoException("Parâmetro " + parametro + " inválido -> Opções codigoUF | sigla | nome | status inscritos exatamente como esá descrito ", 404);
             }
 
         }
@@ -53,14 +53,14 @@ public class UfController {
             throw new ValidacaoException("O parâmetro status aceita somente o valor 1 - ATIVADO ou 2 - DESATIVADO", 404);
         }
 
-        if (codigoUf.isPresent()) {
-            Optional<UfModel> codigoUfEncontrado = this.ufService.buscarPorCodigoUf(codigoUf.get());
+        if (codigoUF.isPresent()) {
+            Optional<UfModel> codigoUFEncontrado = this.ufService.buscarPorCodigoUF(codigoUF.get());
 
-            if (codigoUfEncontrado.isEmpty()) {
+            if (codigoUFEncontrado.isEmpty()) {
                 return ResponseEntity.ok().body(new ArrayList<>());
             }
 
-            return ResponseEntity.ok().body(new ListaUfDTO(codigoUfEncontrado.get()));
+            return ResponseEntity.ok().body(new ListaUfDTO(codigoUFEncontrado.get()));
         }
 
         if (sigla.isPresent()) {
@@ -85,7 +85,7 @@ public class UfController {
 
 
 
-        List<UfModel> listarUfPorParametros = this.ufService.listarTodasUfsPorParametros(codigoUf, sigla, nome, status);
+        List<UfModel> listarUfPorParametros = this.ufService.listarTodasUfsPorParametros(codigoUF, sigla, nome, status);
 
         List<ListaUfDTO> listaUfs = listarUfPorParametros.stream().map(ListaUfDTO::new).toList();
 
@@ -114,7 +114,7 @@ public class UfController {
     @Transactional
     public ResponseEntity<List<ListaUfDTO>> deletarUf(@RequestBody @Valid DeletarUfDTO dadosUf) {
 
-        if (dadosUf.codigoUf() == null) {
+        if (dadosUf.codigoUF() == null) {
             throw new RuntimeException("Código do UF não informado");
         }
 

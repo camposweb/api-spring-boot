@@ -12,9 +12,9 @@ public interface IMunicipioRepository extends JpaRepository<MunicipioModel, Long
 
     Boolean existsByCodigoMunicipio(Long  codigoMunicipio);
 
-    Boolean existsByCodigoUf_CodigoUfAndNome(Long codigoUf, String nome);
+    Boolean existsByCodigoUF_CodigoUFAndNome(Long codigoUF, String nome);
 
-    Boolean existsByCodigoUf_CodigoUfAndNomeAndCodigoMunicipioNot(Long codigoUf, String nome, Long CodigoMunicipio);
+    Boolean existsByCodigoUF_CodigoUFAndNomeAndCodigoMunicipioNot(Long codigoUF, String nome, Long CodigoMunicipio);
 
     Optional<MunicipioModel> findByCodigoMunicipio(Long codigoMunicipio);
 

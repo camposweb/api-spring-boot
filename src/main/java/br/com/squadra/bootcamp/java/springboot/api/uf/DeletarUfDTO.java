@@ -7,7 +7,7 @@ public record DeletarUfDTO(
 
         @NotNull
         @Range(min = 1, message = "Deve conter o codigoMunicipio referente")
-        Long codigoUf
+        Long codigoUF
 
 ) {
 }

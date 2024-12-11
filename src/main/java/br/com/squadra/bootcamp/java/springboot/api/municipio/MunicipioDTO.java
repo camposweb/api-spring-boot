@@ -11,10 +11,10 @@ import org.hibernate.validator.constraints.Range;
 public record MunicipioDTO(
 
 	@NotNull
-	@Range(min = 1, message = "Deve conter o codigoUf referente")
+	@Range(min = 1, message = "Deve conter o codigoUF referente")
 	@Digits(integer = 9, fraction = 0, message = "O valor deve ter no máximo 9 dígitos")
 	@Positive(message = "O código UF deve ser maior que 0.")
-	Long codigoUf,
+	Long codigoUF,
 
 	@NotBlank
   @Length(max = 256, message = "Deve conter no máximo 256 caracteres")

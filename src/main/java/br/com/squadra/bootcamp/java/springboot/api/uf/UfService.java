@@ -16,8 +16,8 @@ public class UfService {
     private IUfRepository ufRepository;
 
 
-    public  Optional<UfModel> buscarPorCodigoUf(Long codigoBairro) {
-        return this.ufRepository.findByCodigoUf(codigoBairro);
+    public  Optional<UfModel> buscarPorCodigoUF(Long codigoBairro) {
+        return this.ufRepository.findByCodigoUF(codigoBairro);
     }
 
     public Optional<UfModel> buscarPorSigla(String sigla) {
@@ -28,12 +28,12 @@ public class UfService {
         return this.ufRepository.findByNome(nome);
     }
 
-    public Optional<UfModel> buscarPorCodigoUfSiglaNome(Long codigoUf, String sigla, String nome) {
-        return this.ufRepository.findByCodigoUfAndSiglaAndNome(codigoUf, sigla, nome);
+    public Optional<UfModel> buscarPorCodigoUFSiglaNome(Long codigoUF, String sigla, String nome) {
+        return this.ufRepository.findByCodigoUFAndSiglaAndNome(codigoUF, sigla, nome);
     }
 
     public List<UfModel> listarTodasUfsPorParametros(
-        Optional<Long> codigoUf,
+        Optional<Long> codigoUF,
         Optional<String> sigla,
         Optional<String> nome,
         Optional<Integer> status
@@ -41,13 +41,13 @@ public class UfService {
 
         Specification<UfModel> listarUfParametros = Specification.where(null);
         
-        if (codigoUf.isPresent()) {
+        if (codigoUF.isPresent()) {
             if (this.ufRepository.count((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("codigoUf"), codigoUf.get())) == 0) {
+                    criteriaBuilder.equal(root.get("codigoUF"), codigoUF.get())) == 0) {
                 return Collections.emptyList();
             }
             listarUfParametros = listarUfParametros.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("codigoBairro"), codigoUf.get()));
+                    criteriaBuilder.equal(root.get("codigoBairro"), codigoUF.get()));
         }
 
         if (sigla.isPresent()) {
@@ -101,15 +101,15 @@ public class UfService {
 
     public List<UfModel> atualizarUf(AtualizacaoUfDTO dadosUf) {
 
-        var existeCodigoUf = this.ufRepository.existsByCodigoUf(dadosUf.codigoUf());
-        if (!existeCodigoUf) {
-            throw new ValidacaoException("codigoUf " + dadosUf.codigoUf() + " informado não existe" , 404);
+        var existeCodigoUF = this.ufRepository.existsByCodigoUF(dadosUf.codigoUF());
+        if (!existeCodigoUF) {
+            throw new ValidacaoException("codigoUF " + dadosUf.codigoUF() + " informado não existe" , 404);
         }
 
-        var atualizarUf = this.ufRepository.getReferenceById(dadosUf.codigoUf());
+        var atualizarUf = this.ufRepository.getReferenceById(dadosUf.codigoUF());
 
-        var existeSiglaComOutroCodigoUf = this.ufRepository.existsBySiglaAndCodigoUfNot(dadosUf.sigla(), dadosUf.codigoUf());
-        if (existeSiglaComOutroCodigoUf) {
+        var existeSiglaComOutroCodigoUF = this.ufRepository.existsBySiglaAndCodigoUFNot(dadosUf.sigla(), dadosUf.codigoUF());
+        if (existeSiglaComOutroCodigoUF) {
             throw new ValidacaoException("Sigla " + dadosUf.sigla() + " já existe em outra UF", 404);
         }
 
@@ -122,12 +122,12 @@ public class UfService {
 
     public List<UfModel> deletarUf(DeletarUfDTO dadosUf) {
 
-        var existeCodigoUf = this.ufRepository.existsByCodigoUf(dadosUf.codigoUf());
-        if (!existeCodigoUf) {
-            throw new ValidacaoException("UF com o código " + dadosUf.codigoUf() + " não existe", 404);
+        var existeCodigoUF = this.ufRepository.existsByCodigoUF(dadosUf.codigoUF());
+        if (!existeCodigoUF) {
+            throw new ValidacaoException("UF com o código " + dadosUf.codigoUF() + " não existe", 404);
         }
 
-       this.ufRepository.deleteById(dadosUf.codigoUf());
+       this.ufRepository.deleteById(dadosUf.codigoUF());
 
         return this.ufRepository.findAll();
     }

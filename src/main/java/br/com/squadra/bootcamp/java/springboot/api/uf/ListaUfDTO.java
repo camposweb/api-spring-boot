@@ -2,7 +2,7 @@ package br.com.squadra.bootcamp.java.springboot.api.uf;
 
 public record ListaUfDTO(
 
-        Long codigoUf,
+        Long codigoUF,
 
         String sigla,
 
@@ -13,7 +13,7 @@ public record ListaUfDTO(
 ) {
     public ListaUfDTO(UfModel ufModel) {
         this(
-                ufModel.getCodigoUf(),
+                ufModel.getCodigoUF(),
                 ufModel.getSigla(),
                 ufModel.getNome(),
                 ufModel.getStatus()

@@ -24,7 +24,7 @@ public class MunicipioModel {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CODIGO_UF", nullable = false)
-	private UfModel codigoUf;
+	private UfModel codigoUF;
 
 	@Column(name = "NOME", nullable = false, length = 256)
 	private String nome;
@@ -33,7 +33,7 @@ public class MunicipioModel {
 	private Integer status;
 
 	public MunicipioModel (MunicipioDTO dadosMunicipio) {
-		this.codigoUf = new UfModel(dadosMunicipio.codigoUf());
+		this.codigoUF = new UfModel(dadosMunicipio.codigoUF());
 		this.nome = dadosMunicipio.nome();
 		this.status = dadosMunicipio.status();
 	}
@@ -43,8 +43,8 @@ public class MunicipioModel {
 	}
 
 	public void  atualizarInformacoes(AtualizacaoMunicipioDTO dadosMunicipio) {
-		if (dadosMunicipio.codigoUf() != null) {
-			this.codigoUf = new UfModel(dadosMunicipio.codigoUf());
+		if (dadosMunicipio.codigoUF() != null) {
+			this.codigoUF = new UfModel(dadosMunicipio.codigoUF());
 		}
 
 		if (dadosMunicipio.nome() != null) {

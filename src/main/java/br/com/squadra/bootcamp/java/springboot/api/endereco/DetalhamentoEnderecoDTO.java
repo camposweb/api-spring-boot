@@ -38,7 +38,7 @@ public record DetalhamentoEnderecoDTO(
                 enderecoModel.getCep(),
                 new ListaBairroDTO(enderecoModel.getCodigoBairro()),
                 new ListaMunicipioDTO(enderecoModel.getCodigoBairro().getCodigoMunicipio()),
-                new ListaUfDTO(enderecoModel.getCodigoBairro().getCodigoMunicipio().getCodigoUf())
+                new ListaUfDTO(enderecoModel.getCodigoBairro().getCodigoMunicipio().getCodigoUF())
         );
     }
 }

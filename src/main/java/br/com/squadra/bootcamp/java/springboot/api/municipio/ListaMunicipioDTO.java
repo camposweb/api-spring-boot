@@ -4,7 +4,7 @@ public record ListaMunicipioDTO(
 
 	Long codigoMunicipio,
 
-	Long codigoUf,
+	Long codigoUF,
 
 	String nome,
 
@@ -15,7 +15,7 @@ public record ListaMunicipioDTO(
 	public ListaMunicipioDTO(MunicipioModel municipioModel) {
 		this(
 				municipioModel.getCodigoMunicipio(),
-				municipioModel.getCodigoUf().getCodigoUf(),
+				municipioModel.getCodigoUF().getCodigoUF(),
 				municipioModel.getNome(),
 				municipioModel.getStatus()
 		);

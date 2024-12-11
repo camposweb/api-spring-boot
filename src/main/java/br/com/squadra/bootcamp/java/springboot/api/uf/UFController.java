@@ -53,8 +53,8 @@ public class UFController {
         }
 
         List<UFModel> listarUfPorParametros = this.ufService.listarTodasUfsPorParametros(codigoUF, sigla, nome, status);
-        if (listarUfPorParametros.size() == 1) {
-            return ResponseEntity.ok().body(new ListaUFDTO(listarUfPorParametros.get(0)));
+        if (listarUfPorParametros.size() == 1 || nome.isPresent()) {
+            return ResponseEntity.ok().body(listarUfPorParametros.isEmpty() ? new ArrayList<>() : listarUfPorParametros.get(0));
         }
 
         List<ListaUFDTO> listaUfs = listarUfPorParametros.stream().map(ListaUFDTO::new).toList();

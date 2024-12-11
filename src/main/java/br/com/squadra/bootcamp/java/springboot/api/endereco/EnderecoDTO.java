@@ -16,11 +16,11 @@ public record EnderecoDTO(
         Long codigoBairro,
 
         @NotBlank
-        @Length(max = 256, message = "Deve conter no máximo 256 caracteres")
+        @Length(min = 1 ,max = 3, message = "Deve conter no mínimo 1 caracter e no máximo 3 caracteres")
         String nomeRua,
 
         @NotBlank
-        @Length(max = 10, message = "Deve conter no máximo 10 caracteres")
+        @Length(min = 1 ,max = 10, message = "Deve conter no mínimo 1 caracter e no máximo 10 caracteres")
         String numero,
 
         @NotBlank

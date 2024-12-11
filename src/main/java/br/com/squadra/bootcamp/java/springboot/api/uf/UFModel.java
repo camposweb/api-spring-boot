@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "codigoUF")
-public class UfModel {
+public class UFModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQUENCE_UF")
@@ -35,17 +35,17 @@ public class UfModel {
     @Column(name = "STATUS", nullable = false, length = 3)
     private Integer status;
 
-    public UfModel (UfDTO dadosUf) {
+    public UFModel (UFDTO dadosUf) {
         this.sigla = dadosUf.sigla();
         this.nome = dadosUf.nome();
         this.status = dadosUf.status();
     }
 
-    public UfModel (Long codigoUF) {
+    public UFModel (Long codigoUF) {
         this.codigoUF = codigoUF;
     }
 
-    public void atualizarInformacoes(AtualizacaoUfDTO dadosUf) {
+    public void atualizarInformacoes(AtualizacaoUFDTO dadosUf) {
         if (dadosUf.sigla() != null) {
             this.sigla = dadosUf.sigla();
         }

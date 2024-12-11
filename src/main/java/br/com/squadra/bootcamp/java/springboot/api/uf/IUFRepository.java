@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface IUfRepository extends JpaRepository<UfModel, Long>, JpaSpecificationExecutor<UfModel> {
+public interface IUFRepository extends JpaRepository<UFModel, Long>, JpaSpecificationExecutor<UFModel> {
 
     Boolean existsByCodigoUF(Long codigoUF);
 
@@ -19,12 +19,12 @@ public interface IUfRepository extends JpaRepository<UfModel, Long>, JpaSpecific
 
     Boolean existsBySiglaAndNome(String sigla,String nome);
 
-    Optional<UfModel> findByCodigoUF(Long codigoUF);
+    Optional<UFModel> findByCodigoUF(Long codigoUF);
 
-    Optional<UfModel> findBySigla(String siglaUf);
+    Optional<UFModel> findBySigla(String siglaUf);
 
-    Optional<UfModel> findByNome(String nome);
+    Optional<UFModel> findByNome(String nome);
 
-    Optional<UfModel> findByCodigoUFAndSiglaAndNome(Long codigoUF, String sigla, String nome);
+    Optional<UFModel> findByCodigoUFAndSiglaAndNome(Long codigoUF, String sigla, String nome);
 
 }

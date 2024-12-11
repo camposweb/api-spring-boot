@@ -2,7 +2,7 @@ package br.com.squadra.bootcamp.java.springboot.api.endereco;
 
 import br.com.squadra.bootcamp.java.springboot.api.bairro.ListaBairroDTO;
 import br.com.squadra.bootcamp.java.springboot.api.municipio.ListaMunicipioDTO;
-import br.com.squadra.bootcamp.java.springboot.api.uf.ListaUfDTO;
+import br.com.squadra.bootcamp.java.springboot.api.uf.ListaUFDTO;
 
 public record DetalhamentoEnderecoDTO(
 
@@ -24,7 +24,7 @@ public record DetalhamentoEnderecoDTO(
 
         ListaMunicipioDTO municipio,
 
-        ListaUfDTO uf
+        ListaUFDTO uf
 
 ) {
     public DetalhamentoEnderecoDTO(EnderecoModel enderecoModel) {
@@ -38,7 +38,7 @@ public record DetalhamentoEnderecoDTO(
                 enderecoModel.getCep(),
                 new ListaBairroDTO(enderecoModel.getCodigoBairro()),
                 new ListaMunicipioDTO(enderecoModel.getCodigoBairro().getCodigoMunicipio()),
-                new ListaUfDTO(enderecoModel.getCodigoBairro().getCodigoMunicipio().getCodigoUF())
+                new ListaUFDTO(enderecoModel.getCodigoBairro().getCodigoMunicipio().getCodigoUF())
         );
     }
 }

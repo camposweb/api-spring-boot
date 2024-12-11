@@ -6,6 +6,7 @@ import br.com.squadra.bootcamp.java.springboot.api.endereco.EnderecoModel;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.Iterator;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = "codigoPessoa")
 public class PessoaModel {
 
     @Id

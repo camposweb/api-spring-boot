@@ -1,7 +1,7 @@
 package br.com.squadra.bootcamp.java.springboot.api.municipio;
 
-import br.com.squadra.bootcamp.java.springboot.api.uf.UfDTO;
-import br.com.squadra.bootcamp.java.springboot.api.uf.UfModel;
+import br.com.squadra.bootcamp.java.springboot.api.uf.UFDTO;
+import br.com.squadra.bootcamp.java.springboot.api.uf.UFModel;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,7 +24,7 @@ public class MunicipioModel {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CODIGO_UF", nullable = false)
-	private UfModel codigoUF;
+	private UFModel codigoUF;
 
 	@Column(name = "NOME", nullable = false, length = 256)
 	private String nome;
@@ -33,7 +33,7 @@ public class MunicipioModel {
 	private Integer status;
 
 	public MunicipioModel (MunicipioDTO dadosMunicipio) {
-		this.codigoUF = new UfModel(dadosMunicipio.codigoUF());
+		this.codigoUF = new UFModel(dadosMunicipio.codigoUF());
 		this.nome = dadosMunicipio.nome();
 		this.status = dadosMunicipio.status();
 	}
@@ -44,7 +44,7 @@ public class MunicipioModel {
 
 	public void  atualizarInformacoes(AtualizacaoMunicipioDTO dadosMunicipio) {
 		if (dadosMunicipio.codigoUF() != null) {
-			this.codigoUF = new UfModel(dadosMunicipio.codigoUF());
+			this.codigoUF = new UFModel(dadosMunicipio.codigoUF());
 		}
 
 		if (dadosMunicipio.nome() != null) {

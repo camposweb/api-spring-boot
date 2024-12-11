@@ -36,27 +36,14 @@ public class BairroController {
 
         }
 
-        if (nome.isPresent() && !nome.get().matches("^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$")) {
-            throw new ValidacaoException("O parâmetro nome deve conter apenas letras", 404);
-        }
-
         if (status.isPresent() && (status.get() < 1 || status.get() > 2)) {
             throw new ValidacaoException("O parâmetro status aceita somente o valor 1 - ATIVADO ou 2 - DESATIVADO", 404);
         }
 
-        if (codigoBairro.isPresent()) {
-            Optional<BairroModel> bairroEncontrado = this.bairroService
-                    .buscarPorCodigoBairro(codigoBairro.get());
-
-            if (bairroEncontrado.isEmpty()) {
-                return ResponseEntity.ok(new ArrayList<>());
-            }
-
-            return ResponseEntity.ok().body(new ListaBairroDTO(bairroEncontrado.get()));
-        }
-
-
         List<BairroModel> listaBairroPorParametros = this.bairroService.listarTodosBairrosPorParametros(codigoBairro, codigoMunicipio, nome, status);
+        if (listaBairroPorParametros.size() == 1 && codigoBairro.isPresent()) {
+            return ResponseEntity.ok().body(new ListaBairroDTO(listaBairroPorParametros.get(0)));
+        }
 
         List<ListaBairroDTO> listaBairros = listaBairroPorParametros.stream().map(ListaBairroDTO::new).toList();
 

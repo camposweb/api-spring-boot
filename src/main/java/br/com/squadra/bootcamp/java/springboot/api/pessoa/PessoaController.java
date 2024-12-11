@@ -39,7 +39,7 @@ public class PessoaController {
             throw new ValidacaoException("O parâmetro status aceita somente o valor 1 - ATIVADO ou 2 - DESATIVADO", 404);
         }
 
-        if (codigoPessoa.isPresent()) {
+        /*if (codigoPessoa.isPresent()) {
             Optional<PessoaModel> pessoaEncontrada = this.pessoaService
                     .buscarPorCodigoPessoa(codigoPessoa.get());
 
@@ -48,9 +48,12 @@ public class PessoaController {
             }
 
             return ResponseEntity.ok().body(new DetalhamentoPessoaDTO(pessoaEncontrada.get()));
-        }
+        }*/
 
         List<PessoaModel> listarPessoasPorParametros = this.pessoaService.buscarPessoasComParametrosOpcionais(codigoPessoa, login, status);
+        if (listarPessoasPorParametros.size() == 1 && codigoPessoa.isPresent()) {
+            return ResponseEntity.ok().body(new DetalhamentoPessoaDTO(listarPessoasPorParametros.get(0)));
+        }
 
         List<ListaPessoaDTO> listaPessoas = listarPessoasPorParametros.stream().map(ListaPessoaDTO::new).toList();
 

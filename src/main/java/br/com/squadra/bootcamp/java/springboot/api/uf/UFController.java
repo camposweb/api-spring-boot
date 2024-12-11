@@ -14,13 +14,13 @@ import java.util.*;
 @RestController
 @RequestMapping("/uf")
 @Tag(name = "uf", description = "Operações relacionadas a Ufs")
-public class UfController {
+public class UFController {
 
     @Autowired
-    private UfService ufService;
+    private UFService ufService;
 
     @Autowired
-    private IUfRepository ufRepository;
+    private IUFRepository ufRepository;
 
     private static final Set<String> PARAMETROS_VALIDOS = Set.of("codigoUF", "sigla", "nome", "status");
 
@@ -40,7 +40,6 @@ public class UfController {
 
         }
 
-
         if (sigla.isPresent() && !sigla.get().matches("^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$")) {
             throw new ValidacaoException("O parâmetro silgla deve conter apenas letras", 404);
         }
@@ -53,74 +52,45 @@ public class UfController {
             throw new ValidacaoException("O parâmetro status aceita somente o valor 1 - ATIVADO ou 2 - DESATIVADO", 404);
         }
 
-        if (codigoUF.isPresent()) {
-            Optional<UfModel> codigoUFEncontrado = this.ufService.buscarPorCodigoUF(codigoUF.get());
-
-            if (codigoUFEncontrado.isEmpty()) {
-                return ResponseEntity.ok().body(new ArrayList<>());
-            }
-
-            return ResponseEntity.ok().body(new ListaUfDTO(codigoUFEncontrado.get()));
+        List<UFModel> listarUfPorParametros = this.ufService.listarTodasUfsPorParametros(codigoUF, sigla, nome, status);
+        if (listarUfPorParametros.size() == 1) {
+            return ResponseEntity.ok().body(new ListaUFDTO(listarUfPorParametros.get(0)));
         }
 
-        if (sigla.isPresent()) {
-            Optional<UfModel> siglaEncontrada = this.ufService.buscarPorSigla(sigla.get());
-
-            if (siglaEncontrada.isEmpty()) {
-                return ResponseEntity.ok().body(new ArrayList<>());
-            }
-
-            return ResponseEntity.ok().body(new ListaUfDTO(siglaEncontrada.get()));
-        }
-
-        if (nome.isPresent()) {
-            Optional<UfModel> nomeEncontrado = this.ufService.buscarPorNome(nome.get());
-
-            if (nomeEncontrado.isEmpty()) {
-                return ResponseEntity.ok().body(new ArrayList<>());
-            }
-
-            return ResponseEntity.ok().body(new ListaUfDTO(nomeEncontrado.get()));
-        }
-
-
-
-        List<UfModel> listarUfPorParametros = this.ufService.listarTodasUfsPorParametros(codigoUF, sigla, nome, status);
-
-        List<ListaUfDTO> listaUfs = listarUfPorParametros.stream().map(ListaUfDTO::new).toList();
+        List<ListaUFDTO> listaUfs = listarUfPorParametros.stream().map(ListaUFDTO::new).toList();
 
         return ResponseEntity.ok().body(listaUfs.isEmpty() ? new ArrayList<>() : listaUfs);
     }
 
     @PostMapping
     @Transactional
-    public ResponseEntity<List<ListaUfDTO>> cadastrarUf(@RequestBody @Valid UfDTO dadosUf) {
+    public ResponseEntity<List<ListaUFDTO>> cadastrarUF(@RequestBody @Valid UFDTO dadosUf) {
 
-        var cadastrarUf = this.ufService.cadastrarUf(dadosUf).stream().map(ListaUfDTO::new).toList();
+        var cadastrarUF = this.ufService.cadastrarUF(dadosUf).stream().map(ListaUFDTO::new).toList();
 
-        return ResponseEntity.status(200).body(cadastrarUf);
+        return ResponseEntity.status(200).body(cadastrarUF);
     }
 
     @PutMapping
     @Transactional
-    public ResponseEntity<List<ListaUfDTO>> atualizarUf(@RequestBody @Valid AtualizacaoUfDTO dadosUf) {
+    public ResponseEntity<List<ListaUFDTO>> atualizarUF(@RequestBody @Valid AtualizacaoUFDTO dadosUf) {
 
-        var atualizarUf = this.ufService.atualizarUf(dadosUf).stream().map(ListaUfDTO::new).toList();
+        var atualizarUF = this.ufService.atualizarUF(dadosUf).stream().map(ListaUFDTO::new).toList();
 
-        return ResponseEntity.status(200).body(atualizarUf);
+        return ResponseEntity.status(200).body(atualizarUF);
     }
 
     @DeleteMapping
     @Transactional
-    public ResponseEntity<List<ListaUfDTO>> deletarUf(@RequestBody @Valid DeletarUfDTO dadosUf) {
+    public ResponseEntity<List<ListaUFDTO>> deletarUF(@RequestBody @Valid DeletarUFDTO dadosUf) {
 
         if (dadosUf.codigoUF() == null) {
             throw new RuntimeException("Código do UF não informado");
         }
 
-        var deletarUf = this.ufService.deletarUf(dadosUf).stream().map(ListaUfDTO::new).toList();
+        var deletarUF = this.ufService.deletarUF(dadosUf).stream().map(ListaUFDTO::new).toList();
 
-        return ResponseEntity.status(200).body(deletarUf);
+        return ResponseEntity.status(200).body(deletarUF);
     }
 
 }

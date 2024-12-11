@@ -44,18 +44,10 @@ public class MunicipioController {
 			throw new ValidacaoException("O parâmetro status aceita somente o valor 1 - ATIVADO ou 2 - DESATIVADO", 404);
 		}
 
-		if (codigoMunicipio.isPresent()) {
-			Optional<MunicipioModel> municipioEncontrado = this.municipioService
-					.buscarPorCodigoMunicipio(codigoMunicipio.get());
-
-			if (municipioEncontrado.isEmpty()) {
-				return ResponseEntity.ok().body(new ArrayList<>());
-			}
-
-			return ResponseEntity.ok().body(new ListaMunicipioDTO(municipioEncontrado.get()));
-		}
-
 		List<MunicipioModel> listarMunicipiosPorParametros = this.municipioService.listarTodosMunicipiosPorParametros(codigoMunicipio, codigoUF, nome, status);
+		if (listarMunicipiosPorParametros.size() == 1 && codigoMunicipio.isPresent()) {
+			return ResponseEntity.ok().body(new ListaMunicipioDTO(listarMunicipiosPorParametros.get(0)));
+		}
 
 		List<ListaMunicipioDTO> listaMunicipios = listarMunicipiosPorParametros.stream().map(ListaMunicipioDTO::new).toList();
 

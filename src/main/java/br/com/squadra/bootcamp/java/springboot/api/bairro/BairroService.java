@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -37,42 +38,28 @@ public class BairroService {
         Specification<BairroModel> listaBairroParametros = Specification.where(null);
 
         if (codigoBairro.isPresent()) {
-            if (this.bairroRepository.count((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("codigoBairro"), codigoBairro.get())) == 0) {
-                return Collections.emptyList();
-            }
             listaBairroParametros = listaBairroParametros.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("codigoBairro"), codigoBairro.get()));
         }
 
         if (codigoMunicipio.isPresent()) {
-            if (this.bairroRepository.count((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("codigoMunicipio").get("codigoMunicipio"), codigoMunicipio.get())) == 0) {
-                return Collections.emptyList();
-            }
             listaBairroParametros = listaBairroParametros.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("codigoMunicipio").get("codigoMunicipio"), codigoMunicipio.get()));
         }
 
         if (nome.isPresent()) {
-            if (this.bairroRepository.count((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(criteriaBuilder.lower(root.get("nome")), nome.get().toLowerCase())) == 0) {
-                return Collections.emptyList();
-            }
             listaBairroParametros = listaBairroParametros.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(criteriaBuilder.lower(root.get("nome")), nome.get().toLowerCase()));
         }
 
         if (status.isPresent()) {
-            if (this.bairroRepository.count((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("status"), status.get())) == 0) {
-                return Collections.emptyList();
-            }
             listaBairroParametros = listaBairroParametros.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("status"), status.get()));
         }
 
-        return this.bairroRepository.findAll(listaBairroParametros);
+        List<BairroModel> resultado = this.bairroRepository.findAll(listaBairroParametros);
+
+        return resultado.isEmpty() ? new ArrayList<>() : resultado;
     }
 
     public List<BairroModel> cadastrarBairro(BairroDTO dadosBairro) {

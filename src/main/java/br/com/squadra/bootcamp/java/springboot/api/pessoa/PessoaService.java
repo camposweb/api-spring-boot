@@ -40,34 +40,23 @@ public class PessoaService {
         Specification<PessoaModel> buscarPessoaComParametros = Specification.where(null);
 
         if (codigoPessoa.isPresent()) {
-            if (this.pessoaRepository.count((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("codigoPessoa"), codigoPessoa.get())) == 0) {
-                return Collections.emptyList();
-            }
             buscarPessoaComParametros = buscarPessoaComParametros.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("codigoPessoa"), codigoPessoa.get()));
         }
 
         if (login.isPresent()) {
-            if (this.pessoaRepository.count((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("login"), login.get())) == 0) {
-                return Collections.emptyList();
-            }
             buscarPessoaComParametros = buscarPessoaComParametros.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("login"), login.get()));
         }
 
         if (status.isPresent()) {
-            if (this.pessoaRepository.count((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("status"), status.get())) == 0) {
-                return Collections.emptyList();
-            }
             buscarPessoaComParametros = buscarPessoaComParametros.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("status"), status.get()));
         }
 
+        List<PessoaModel> resultado = this.pessoaRepository.findAll(buscarPessoaComParametros);
 
-        return this.pessoaRepository.findAll(buscarPessoaComParametros);
+        return resultado.isEmpty() ? Collections.emptyList() : resultado;
     }
 
     public List<PessoaModel> cadastrarPessoa(PessoaDTO dadosPessoa) {

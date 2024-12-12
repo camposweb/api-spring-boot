@@ -35,7 +35,6 @@ public record AtualizacaoEnderecoDTO(
         @Length(min = 1 ,max = 10, message = "Deve conter no mínimo 1 caracter e no máximo 10 caracteres")
         String numero,
 
-        @NotBlank
         @Length(max = 20, message = "Deve conter no máximo 20 caracteres")
         String complemento,
 

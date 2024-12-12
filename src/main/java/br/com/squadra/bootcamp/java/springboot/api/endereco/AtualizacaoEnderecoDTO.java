@@ -28,18 +28,18 @@ public record AtualizacaoEnderecoDTO(
         Long codigoBairro,
 
         @NotBlank
-        @Length(min = 1 ,max = 256, message = "Deve conter no mínimo 1 caractere e no máximo 256 caracterees")
+        @Length(min = 1 ,max = 256, message = "Deve conter no mínimo 1 caractere e no máximo 256 caracteres")
         String nomeRua,
 
         @NotBlank
-        @Length(min = 1 ,max = 10, message = "Deve conter no mínimo 1 caractere e no máximo 10 caracterees")
+        @Length(min = 1 ,max = 10, message = "Deve conter no mínimo 1 caractere e no máximo 10 caracteres")
         String numero,
 
-        @Length(max = 20, message = "Deve conter no máximo 20 caracterees")
+        @Length(max = 20, message = "Deve conter no máximo 20 caracteres")
         String complemento,
 
         @NotBlank
-        @Length(max = 10, message = "Deve conter no máximo 10 caracterees")
+        @Length(max = 10, message = "Deve conter no máximo 10 caracteres")
         String cep
 
 ) {

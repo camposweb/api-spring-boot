@@ -13,12 +13,12 @@ public record AtualizacaoUFDTO(
         Long codigoUF,
 
         @NotBlank
-        @Length(min = 1 ,max = 3, message = "Deve conter no mínimo 1 caractere e no máximo 3 caracterees")
+        @Length(min = 1 ,max = 3, message = "Deve conter no mínimo 1 caractere e no máximo 3 caracteres")
         @Pattern(regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$", message = "Deve conter apenas letras")
         String sigla,
 
         @NotBlank
-        @Length(min = 1 ,max = 60, message = "Deve conter no mínimo 1 caractere e no máximo 60 caracterees")
+        @Length(min = 1 ,max = 60, message = "Deve conter no mínimo 1 caractere e no máximo 60 caracteres")
         @Pattern(regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$", message = "Deve conter apenas letras")
         String nome,
 

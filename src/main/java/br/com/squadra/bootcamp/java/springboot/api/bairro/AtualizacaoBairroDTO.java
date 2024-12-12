@@ -19,7 +19,7 @@ public record AtualizacaoBairroDTO(
         Long codigoMunicipio,
 
         @NotBlank
-        @Length(min = 1 ,max = 256, message = "Deve conter no mínimo 1 caractere e no máximo 256 caracterees")
+        @Length(min = 1 ,max = 256, message = "Deve conter no mínimo 1 caractere e no máximo 256 caracteres")
         String nome,
 
         @NotNull

@@ -16,12 +16,12 @@ public record AtualizacaoPessoaDTO(
         Long codigoPessoa,
 
         @NotBlank
-        @Length(min = 1 ,max = 256, message = "Deve conter no mínimo 1 caractere e no máximo 256 caracterees")
+        @Length(min = 1 ,max = 256, message = "Deve conter no mínimo 1 caractere e no máximo 256 caracteres")
         @Pattern(regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$", message = "Deve conter apenas letras")
         String nome,
 
         @NotBlank
-        @Length(min = 1 ,max = 256, message = "Deve conter no mínimo 1 caractere e no máximo 256 caracterees")
+        @Length(min = 1 ,max = 256, message = "Deve conter no mínimo 1 caractere e no máximo 256 caracteres")
         @Pattern(regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$", message = "Deve conter apenas letras")
         String sobrenome,
 
@@ -32,11 +32,11 @@ public record AtualizacaoPessoaDTO(
         Integer idade,
 
         @NotBlank
-        @Length(min = 1 ,max = 50, message = "Deve conter no mínimo 1 caractere e no máximo 50 caracterees")
+        @Length(min = 1 ,max = 50, message = "Deve conter no mínimo 1 caractere e no máximo 50 caracteres")
         String login,
 
         @NotBlank
-        @Length(min = 1 ,max = 50, message = "Deve conter no mínimo 1 caractere e no máximo 50 caracterees")
+        @Length(min = 1 ,max = 50, message = "Deve conter no mínimo 1 caractere e no máximo 50 caracteres")
         String senha,
 
         @NotNull

@@ -13,7 +13,7 @@ public record MunicipioDTO(
 	Long codigoUF,
 
 	@NotBlank
-  	@Length(min = 1 ,max = 256, message = "Deve conter no mínimo 1 caracter e no máximo 256 caracteres")
+  	@Length(min = 1 ,max = 256, message = "Deve conter no mínimo 1 caractere e no máximo 256 caracterees")
 	@Pattern(regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$", message = "Deve conter apenas letras")
 	String nome,
 

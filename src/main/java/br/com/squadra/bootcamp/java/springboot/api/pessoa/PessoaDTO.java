@@ -11,12 +11,12 @@ import java.util.List;
 public record PessoaDTO(
 
         @NotBlank
-        @Length(min = 1 ,max = 256, message = "Deve conter no mínimo 1 caracter e no máximo 256 caracteres")
+        @Length(min = 1 ,max = 256, message = "Deve conter no mínimo 1 caractere e no máximo 256 caracterees")
         @Pattern(regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$", message = "Deve conter apenas letras")
         String nome,
 
         @NotBlank
-        @Length(min = 1 ,max = 256, message = "Deve conter no mínimo 1 caracter e no máximo 256 caracteres")
+        @Length(min = 1 ,max = 256, message = "Deve conter no mínimo 1 caractere e no máximo 256 caracterees")
         @Pattern(regexp = "^[a-zA-ZÀ-ÖØ-öø-ÿÇç ]+$", message = "Deve conter apenas letras")
         String sobrenome,
 
@@ -27,11 +27,11 @@ public record PessoaDTO(
         Integer idade,
 
         @NotBlank
-        @Length(max = 50, message = "Deve conter no máximo 50 caracteres")
+        @Length(max = 50, message = "Deve conter no máximo 50 caracterees")
         String login,
 
         @NotBlank
-        @Length(max = 50, message = "Deve conter no máximo 50 caracteres")
+        @Length(max = 50, message = "Deve conter no máximo 50 caracterees")
         String senha,
 
         @NotNull

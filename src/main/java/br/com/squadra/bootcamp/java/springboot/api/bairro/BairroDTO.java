@@ -13,7 +13,7 @@ public record BairroDTO(
         Long codigoMunicipio,
 
         @NotBlank
-        @Length(min = 1 ,max = 256, message = "Deve conter no mínimo 1 caracter e no máximo 256 caracteres")
+        @Length(min = 1 ,max = 256, message = "Deve conter no mínimo 1 caractere e no máximo 256 caracterees")
         String nome,
 
         @NotNull

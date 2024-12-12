@@ -1,6 +1,7 @@
 package br.com.squadra.bootcamp.java.springboot.api.uf;
 
 import br.com.squadra.bootcamp.java.springboot.api.infra.exception.ValidacaoException;
+import br.com.squadra.bootcamp.java.springboot.api.pessoa.DetalhamentoPessoaDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.Comparator;
 
 
 @RestController
